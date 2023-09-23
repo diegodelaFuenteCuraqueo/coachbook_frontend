@@ -1,34 +1,45 @@
 // src/components/Register.js
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { useAuth } from '../context/AuthContext'
 
-import React, { useState } from 'react';
-import axios from 'axios';
-
-const apiUrl = 'http://localhost:5000/api/register';
+const apiUrl = 'http://localhost:5000/api/register'
 
 function Register() {
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login')
+    }
+  }, [isAuthenticated, navigate])
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
     email: ''
-  });
+  })
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    });
-  };
+    })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
-      const response = await axios.post(apiUrl, formData);
-      console.log(response.data); // Registration successful message
+      const response = await axios.post(apiUrl, formData)
+      console.log(response.data)
+      navigate('/login')
     } catch (error) {
-      console.error(error.response.data); // Registration failed message
+      console.error(error.response.data)
     }
-  };
+  }
 
   return (
     <div>
@@ -64,15 +75,14 @@ function Register() {
             id="email"
             onChange={handleChange}
             value={formData.email}
-            required
           />
         </div>
 
         <button type="submit">Register</button>
       </form>
     </div>
-  );
+  )
 }
 
-export default Register;
+export default Register
 

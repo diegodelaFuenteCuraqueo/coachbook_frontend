@@ -1,15 +1,26 @@
 // src/components/HomePage.js
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import React, {useEffect} from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const HomePage = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { isAuthenticated, logout } = useAuth()
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate])
+
   const username = new URLSearchParams(location.search).get('username')
 
   return (
     <div>
       <h1>Welcome, {username}!</h1>
-      {/* Add any other content you want to display on the homepage */}
+      <button onClick={() => navigate('/register')}>Register</button>
+      <button onClick={() => { logout() }}>Log out</button>
     </div>
   )
 }
