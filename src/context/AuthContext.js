@@ -8,8 +8,8 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState()
-  
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
   console.log('AuthProvider', isAuthenticated)
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -22,6 +22,7 @@ export function AuthProvider({ children }) {
   }
 
   const logout = () => {
+    localStorage.removeItem('token')
     setIsAuthenticated(false)
   }
 

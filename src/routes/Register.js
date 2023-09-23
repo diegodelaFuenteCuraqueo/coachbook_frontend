@@ -32,7 +32,6 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     try {
       const response = await axios.post(apiUrl, formData)
       console.log(response.data)
