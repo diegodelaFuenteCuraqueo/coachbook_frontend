@@ -21,7 +21,7 @@ function Login() {
       const response = await axios.post(apiUrl, { username, password })
       console.log('Login response:', response)
       console.log('isAuthenticated:', isAuthenticated)
-
+      localStorage.setItem('token', response.data.token)
       login()
       navigate(`/home?username=${username}`)
     } catch (error) {

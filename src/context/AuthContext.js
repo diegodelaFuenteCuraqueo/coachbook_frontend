@@ -1,6 +1,5 @@
 // src/context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const AuthContext = createContext()
 
@@ -9,17 +8,14 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const navigate = useNavigate()
-
+  const [isAuthenticated, setIsAuthenticated] = useState()
+  
+  console.log('AuthProvider', isAuthenticated)
   useEffect(() => {
     const token = localStorage.getItem('token')
     setIsAuthenticated(!!token)
+    console.log('AuthProvider: useEffect', isAuthenticated, localStorage.getItem('token'))
   }, [])
-
-  useEffect(() => {
-    console.log('isAuthenticated:', isAuthenticated)
-  }, [isAuthenticated])
 
   const login = () => {
     setIsAuthenticated(true)
@@ -27,7 +23,6 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     setIsAuthenticated(false)
-    navigate('/login')
   }
 
   const value = {

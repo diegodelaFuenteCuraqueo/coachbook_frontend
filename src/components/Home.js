@@ -19,8 +19,8 @@ const HomePage = () => {
   return (
     <div>
       <h1>Welcome, {username}!</h1>
-      <button onClick={() => navigate('/register')}>Register</button>
-      <button onClick={() => { logout() }}>Log out</button>
+      <button onClick={() => { navigate('/register') }}>Register</button>
+      <button onClick={() => { logout(); navigate('/login') }}>Log out</button>
     </div>
   )
 }

@@ -12,9 +12,10 @@ function Register() {
 
   useEffect(() => {
     if (!isAuthenticated) {
+      console.log("not auth")
       navigate('/login')
     }
-  }, [isAuthenticated, navigate])
+  }, [])
 
   const [formData, setFormData] = useState({
     username: '',
