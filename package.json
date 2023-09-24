@@ -1,8 +1,8 @@
 {
-  "homepage":"https://diegodelaFuenteCuraqueo.github.io/emuna_frontend",
+  "homepage":"https://diegodelafuentecuraqueo.github.io/emuna_frontend",
   "name": "emuna_frontend",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
