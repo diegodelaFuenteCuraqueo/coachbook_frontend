@@ -32,10 +32,10 @@ const CreateTimeBlock = () => {
     try {
       console.log('handleSubmit', formData)
       // Make a POST request to create a new time block
-      const response = await axios.post(apiUrl+'/api/save-time-block', formData)
+      const response = await axios.post(apiUrl+'/api/save-timeblock', formData)
       console.log("response", response)
       // Redirect to a page showing the newly created time block
-      navigate(`/timeblocks/${response.data._id}`)
+      navigate(`/home`)
     } catch (error) {
       console.error(error)
     }

@@ -22,8 +22,9 @@ function Login() {
       console.log('Login response:', response)
       console.log('isAuthenticated:', isAuthenticated)
       localStorage.setItem('token', response.data.token)
+      localStorage.setItem('userID', response.data.userPayload.id)
       login()
-      navigate(`/home?username=${username}`)
+      navigate(`/home`)
     } catch (error) {
       setLogMessage(error.response.data.message)
       console.error('Login failed:', error)
