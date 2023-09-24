@@ -1,6 +1,6 @@
 // src/App.js
 import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import Login from './routes/Login'
 import Register from './routes/Register'
 import HomePage from './routes/Home'
@@ -14,11 +14,11 @@ function Pages() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={ <Login />} />
+        <Route path="/login" element={ <Login />} />
         <Route path="/register" element={ isAuthenticated ? <Register /> : <Login /> } />
         <Route path="/home" element={ isAuthenticated ? <HomePage /> : <Login /> } />
-        <Route path="/create-timeblock" element={<CreateTimeBlock />} />
+        <Route path="/create-timeblock" element={ <CreateTimeBlock /> } />
       </Routes>
     </Router>
   )
