@@ -14,6 +14,7 @@ function Pages() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={ isAuthenticated ? <Register /> : <Login /> } />
         <Route path="/home" element={ isAuthenticated ? <HomePage /> : <Login /> } />
