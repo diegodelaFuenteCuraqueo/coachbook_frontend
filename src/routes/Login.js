@@ -7,22 +7,23 @@ import axios from 'axios'
 const apiUrl = 'http://localhost:5000/api/login'
 
 function Login() {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [logMessage, setLogMessage] = useState('')
   const navigate = useNavigate()
 
-  const { isAuthenticated, login } = useAuth()
+  const { isAuthenticated, login, setUser, setToken } = useAuth()
 
   const handleLogin = async () => {
-    console.log('Login clicked', { username, password })
+    console.log('Login clicked', { email, password })
     setLogMessage('')
     try {
-      const response = await axios.post(apiUrl, { username, password })
+      const response = await axios.post(apiUrl, { email, password })
       console.log('Login response:', response)
       console.log('isAuthenticated:', isAuthenticated)
-      localStorage.setItem('token', response.data.token)
-      localStorage.setItem('userID', response.data.userPayload.id)
+      //localStorage.setItem('token', response.data.token)
+      setToken(response.data.token)
+      setUser(response.data.userPayload)
       login()
       navigate(`/home`)
     } catch (error) {
@@ -37,8 +38,8 @@ function Login() {
       <input
         type="text"
         placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"
@@ -48,6 +49,9 @@ function Login() {
       />
       <button onClick={handleLogin}>Login</button>
       <p style={{ color: 'red' }}>{logMessage}</p>
+      <div>
+        <button onClick={() => { navigate('/register') }}>Register</button>
+      </div>
     </div>
   )
 }

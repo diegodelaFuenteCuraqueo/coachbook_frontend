@@ -11,9 +11,9 @@ function Register() {
   const { isAuthenticated } = useAuth()
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      console.log("not auth")
-      navigate('/login')
+    if (isAuthenticated) {
+      console.log("is auth")
+      navigate('/home')
     }
   }, [])
 
@@ -43,7 +43,7 @@ function Register() {
 
   return (
     <div>
-      <h2>Register</h2>
+      <h2> Register</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="username">Username</label>
@@ -75,11 +75,25 @@ function Register() {
             id="email"
             onChange={handleChange}
             value={formData.email}
+            required
           />
+        </div>
+        <div>
+          <label htmlFor="usertype">User type</label>
+          <select name="usertype" id="usertype" onChange={handleChange} required>
+            <option value="">Select a user type</option>
+            <option value="coach">Coach</option>
+            <option value="client">Client</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
 
         <button type="submit">Register</button>
       </form>
+      <div>
+        <br/>
+        <button onClick={() => { navigate('/login') }}>Login</button>
+      </div>
     </div>
   )
 }

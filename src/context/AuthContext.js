@@ -9,24 +9,24 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [userId, setUserId] = useState(null)
+  const [user, setUser] = useState(null)
+  const [token, setToken] = useState(null)
 
   console.log('AuthProvider', isAuthenticated)
   useEffect(() => {
     const token = localStorage.getItem('token')
     setIsAuthenticated(!!token)
-    setUserId(localStorage.getItem('userID'))
+    setUser(localStorage.getItem('user'))
     console.log('AuthProvider: useEffect', isAuthenticated, localStorage.getItem('token'))
   }, [])
 
   const login = () => {
     setIsAuthenticated(true)
-    setUserId(localStorage.getItem('userID'))
   }
 
   const logout = () => {
-    localStorage.removeItem('userID')
-    localStorage.removeItem('token')
+    setUser(null)
+    setToken(null)
     setIsAuthenticated(false)
   }
 
@@ -34,7 +34,10 @@ export function AuthProvider({ children }) {
     isAuthenticated,
     login,
     logout,
-    userId
+    user,
+    setUser,
+    token,
+    setToken
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

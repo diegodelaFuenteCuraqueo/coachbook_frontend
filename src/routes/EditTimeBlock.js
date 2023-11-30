@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState  } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext' // Import the useAuth hook
 
 const apiUrl = 'http://localhost:5000'
 
-const CreateTimeBlock = () => {
+const EditTimeBlock = () => {
+  const location = useLocation()
+  const receivedData = location.state
   const navigate = useNavigate()
   const { user } = useAuth()
 
@@ -14,8 +16,26 @@ const CreateTimeBlock = () => {
     name: '',
     startDate: '',
     endDate: '',
-    createdBy: user.id || "650f416197c0c31963b71f2a", // This should be the user's ID
+    createdBy: "", //user.id || "650f416197c0c31963b71f2a", // This should be the user's ID
+    clientID: ''
   })
+
+  useEffect(() => {
+    console.log("receivedData", receivedData)
+    try {
+      const fetchTimeblock = async () => {
+        const response = await axios.post(apiUrl+'/api/timeblock', { timeblockID: receivedData.timeblockID, userID: user.id })
+        console.log(response.data)
+        const { name, clientID="" } = response.data.timeBlock
+        const startDate = response.data.timeBlock.startDate.slice(0, 16)
+        const endDate = response.data.timeBlock.endDate.slice(0, 16)
+        setFormData({ name, startDate, endDate, createdBy: user.id, clientID: response.data.timeBlock?.clientID || "" })
+      }
+      fetchTimeblock()
+    } catch (error) {
+      console.error(error)
+    }
+  }, [])
 
   // Function to handle form input changes
   const handleChange = (e) => {
@@ -31,8 +51,10 @@ const CreateTimeBlock = () => {
 
     try {
       console.log('handleSubmit', formData)
-      const response = await axios.post(apiUrl+'/api/save-timeblock', formData)
+      // Make a POST request to create a new time block
+      const response = await axios.post(apiUrl+'/api/edit-timeblock', {timeblockID: receivedData.timeblockID, ...formData})
       console.log("response", response)
+      // Redirect to a page showing the newly created time block
       navigate(`/home`)
     } catch (error) {
       console.error(error)
@@ -41,7 +63,7 @@ const CreateTimeBlock = () => {
 
   return (
     <div>
-      <h2>Create Time Block</h2>
+      <h2>EditTimeBlock Time Block</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name</label>
@@ -77,13 +99,19 @@ const CreateTimeBlock = () => {
           />
         </div>
         <div>
-          {/* For createdBy, you may need to get the user's ID from your authentication context */}
-          {/*<input type="hidden" name="createdBy" value=User's ID />*/}
+          <label htmlFor="endDate">ClientID</label>
+          <input
+            type="text"
+            name="clientID"
+            id="clientID"
+            onChange={handleChange}
+            value={formData.clientID}
+          />
         </div>
-        <button type="submit">Create</button>
+        <button type="submit">Update timeblock</button>
       </form>
     </div>
   )
 }
 
-export default CreateTimeBlock
+export default EditTimeBlock
