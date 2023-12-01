@@ -2,8 +2,10 @@ import React, { useEffect, useState  } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext' // Import the useAuth hook
+import { URL } from '../constants.js'
 
-const apiUrl = 'http://localhost:5000'
+const editTBApiUrl = URL.LOCALHOST + URL.API.editTimeBlock
+const getTBApiUrl = URL.LOCALHOST + URL.API.timeBlock
 
 const EditTimeBlock = () => {
   const location = useLocation()
@@ -24,7 +26,9 @@ const EditTimeBlock = () => {
     console.log("receivedData", receivedData)
     try {
       const fetchTimeblock = async () => {
-        const response = await axios.post(apiUrl+'/api/timeblock', { timeblockID: receivedData.timeblockID, userID: user.id })
+        //const response = await axios.post(apiUrl+'/api/timeblock', { timeblockID: receivedData.timeblockID, userID: user._id })
+        const response = await axios.post(getTBApiUrl, { timeblockID: receivedData.timeblockID, userID: user._id })
+
         console.log(response.data)
         const { name, clientID="" } = response.data.timeBlock
         const startDate = response.data.timeBlock.startDate.slice(0, 16)
@@ -52,7 +56,7 @@ const EditTimeBlock = () => {
     try {
       console.log('handleSubmit', formData)
       // Make a POST request to create a new time block
-      const response = await axios.post(apiUrl+'/api/edit-timeblock', {timeblockID: receivedData.timeblockID, ...formData})
+      const response = await axios.post(editTBApiUrl, {timeblockID: receivedData.timeblockID, ...formData})
       console.log("response", response)
       // Redirect to a page showing the newly created time block
       navigate(`/home`)

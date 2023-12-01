@@ -6,6 +6,7 @@ import Register from './routes/Register'
 import HomePage from './routes/Home'
 import CreateTimeBlock from './routes/CreateTimeBlock'
 import EditTimeBlock from './routes/EditTimeBlock'
+import PickTimeBlock from './routes/PickTimeBlock'
 import { useAuth } from './context/AuthContext'
 
 function Pages() {
@@ -21,6 +22,7 @@ function Pages() {
         <Route path="/home" element={ isAuthenticated ? <HomePage /> : <Login /> } />
         <Route path="/create-timeblock" element={ isAuthenticated ? <CreateTimeBlock /> : <Login /> } />
         <Route path="/edit-timeblock" element={ isAuthenticated ? <EditTimeBlock /> : <Login /> } />
+        <Route path="/pick-timeblock" element={ isAuthenticated ? <PickTimeBlock /> : <Login /> } />
       </Routes>
     </Router>
   )

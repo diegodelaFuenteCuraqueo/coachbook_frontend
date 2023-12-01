@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import axios from 'axios'
+import { URL } from '../constants'
 
-const apiUrl = 'http://localhost:5000/api/login'
+const apiUrl = URL.LOCALHOST + URL.API.login
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -12,19 +13,18 @@ function Login() {
   const [logMessage, setLogMessage] = useState('')
   const navigate = useNavigate()
 
-  const { isAuthenticated, login, setUser, setToken } = useAuth()
+  const { isAuthenticated, login } = useAuth()
 
   const handleLogin = async () => {
     console.log('Login clicked', { email, password })
     setLogMessage('')
     try {
       const response = await axios.post(apiUrl, { email, password })
-      console.log('Login response:', response)
+      console.log('Login response:', response.data)
       console.log('isAuthenticated:', isAuthenticated)
-      //localStorage.setItem('token', response.data.token)
-      setToken(response.data.token)
-      setUser(response.data.userPayload)
-      login()
+      //setToken(response.data.token)
+      //setUser(response.data.userPayload.id)
+      login(response.data)
       navigate(`/home`)
     } catch (error) {
       setLogMessage(error.response.data.message)

@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
+import { URL } from '../constants.js'
 
-const apiUrl = 'http://localhost:5000/api/register'
+const apiUrl = URL.LOCALHOST + URL.API.register
 
 function Register() {
   const navigate = useNavigate()

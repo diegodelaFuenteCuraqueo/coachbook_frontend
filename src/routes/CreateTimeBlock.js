@@ -1,21 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext' // Import the useAuth hook
+import { URL } from '../constants.js'
 
-const apiUrl = 'http://localhost:5000'
+const apiUrl = URL.LOCALHOST + URL.API.saveTimeBlock
 
 const CreateTimeBlock = () => {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
+  const [formData, setFormData] = useState({})
 
-  // State to store form data
-  const [formData, setFormData] = useState({
-    name: '',
-    startDate: '',
-    endDate: '',
-    createdBy: user.id || "650f416197c0c31963b71f2a", // This should be the user's ID
-  })
+  useEffect(() => {
+    console.log('CreateTimeBlock', user, user.id)
+    if (!user) {
+      navigate('/login')
+    } else {
+      setFormData({
+        name: '',
+        startDate: '',
+        endDate: '',
+        createdBy: user._id //|| "650f416197c0c31963b71f2a", // This should be the user's ID
+      })
+    }
+  }, [])
+
 
   // Function to handle form input changes
   const handleChange = (e) => {
@@ -31,7 +40,7 @@ const CreateTimeBlock = () => {
 
     try {
       console.log('handleSubmit', formData)
-      const response = await axios.post(apiUrl+'/api/save-timeblock', formData)
+      const response = await axios.post(apiUrl, formData)
       console.log("response", response)
       navigate(`/home`)
     } catch (error) {
@@ -82,6 +91,8 @@ const CreateTimeBlock = () => {
         </div>
         <button type="submit">Create</button>
       </form>
+      <button onClick={() => { logout(); navigate('/home') }}>Home</button>
+      <button onClick={() => { logout(); navigate('/login') }}>Log out</button>
     </div>
   )
 }

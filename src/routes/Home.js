@@ -3,7 +3,10 @@ import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import axios from 'axios'
-const apiUrl = 'http://localhost:5000'
+import { URL } from '../constants.js'
+
+const userTBapiURL = URL.LOCALHOST + URL.API.userTimeBlocks
+const deleteTBapiURL = URL.LOCALHOST + URL.API.deleteTimeBlock
 
 const HomePage = () => {
 
@@ -11,14 +14,32 @@ const HomePage = () => {
   const { isAuthenticated, logout, user } = useAuth()
   const [ timeblocks, setTimeblocks] = useState([])
 
-  // Inside your component function
+  useEffect(() => {
+    console.log('HomePage', isAuthenticated, user)
+    fetchTimeblocks()
+  }, [])
+
+  useEffect(() => {
+    console.log('HomePage:useEffect user', isAuthenticated, user)
+    fetchTimeblocks()
+  }, [user])
+
+  const fetchTimeblocks = async () => {
+    if (user && isAuthenticated) {
+      console.log('fetchTimeblocks', user)
+      setTimeblocks(await fetchUserTimeblocks(user._id))
+    } else {
+      console.log('fetchTimeblocks to login', user)
+      navigate('/')
+    }
+  }
+
   const fetchUserTimeblocks = async (userID) => {
     try {
-      console.log('fetchUserTimeblocks', user)
-      const response = await axios.post(apiUrl+'/api/user-timeblocks', { userID }) // Replace with your actual API endpoint
+      console.log('fetchUserTimeblocks', userID)
+      const response = await axios.post(userTBapiURL, { userID }) // Replace with your actual API endpoint
       const timeblocks = response.data.timeBlocks // Assuming the response is an array of timeblocks
       console.log(timeblocks)
-      // Set the timeblocks in your component's state or context if necessary
       return timeblocks
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
@@ -28,9 +49,9 @@ const HomePage = () => {
   const deleteTimeblock = async (timeblockID) => {
     try {
       console.log('deleteTimeblock', timeblockID)
-      const response = await axios.post(apiUrl+'/api/delete-timeblock', { timeblockID, _id: user.id }) // Replace with your actual API endpoint
+      const response = await axios.post(deleteTBapiURL, { timeblockID, _id: user._id }) // Replace with your actual API endpoint
       console.log(response)
-      setTimeblocks(await fetchUserTimeblocks(user.id))
+      fetchTimeblocks()
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
     }
@@ -41,18 +62,6 @@ const HomePage = () => {
     navigate(`/edit-timeblock`, { state: { timeblockID } })
   }
 
-  useEffect(() => {
-    console.log('HomePage', isAuthenticated, user)
-    const fetchTimeblocks = async () => {
-      if (!isAuthenticated || !user) {
-        navigate('/login');
-      } else {
-        setTimeblocks(await fetchUserTimeblocks(user.id))
-      }
-    }
-    fetchTimeblocks()
-  }, [])
-
   return (
     <>
       <div>
@@ -61,9 +70,10 @@ const HomePage = () => {
           <li>Usertype: {user?.usertype || ""}</li>
           <li>email: {user?.email || ""}</li>
           <li>registered on: {user?.registerDate || ""}</li>
-          <li>id: {user?.id || ""}</li>
+          <li>id: {user?._id || ""}</li>
         </ul>
         <button onClick={() => { navigate('/create-timeblock') }}>Create timeblock</button>
+        <button onClick={() => { navigate('/pick-timeblock') }}>Pick timeblock</button>
         <button onClick={() => { logout(); navigate('/login') }}>Log out</button>
       </div>
       <div>
@@ -76,6 +86,10 @@ const HomePage = () => {
                     <p>Name: {timeblock.name}</p>
                     <p>Start Date: {timeblock.startDate}</p>
                     <p>End Date: {timeblock.endDate}</p>
+                    { !timeblock?.available && timeblock.clientID?._id
+                      ? <p>Client: {timeblock.clientID?.username}</p>
+                      : <p>Available</p>
+                    }
                   </div>
                   <div>
                     <button onClick={() => { editTimeBlock(timeblock._id) }}>Edit</button>
