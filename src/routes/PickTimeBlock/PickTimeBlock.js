@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { useAuth } from '../context/AuthContext'
-import { URL } from '../constants'
+import { useAuth } from '../../context/AuthContext'
+import { URL } from '../../constants'
 
 const { LOCALHOST, API } = URL
 const coachesApiUrl = LOCALHOST + API.coaches
 const userTBapiURL = LOCALHOST + API.userTimeBlocks
 const bookTBapiURL = LOCALHOST + API.bookTimeBlock
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 function PickTimeBlock() {
   const { isAuthenticated, user } = useAuth()
@@ -65,7 +66,7 @@ function PickTimeBlock() {
   const fetchUserTimeblocks = async (userID) => {
     try {
       console.log('fetchCoachTimeblocks', userID)
-      const response = await axios.post(userTBapiURL, { userID }) // Replace with your actual API endpoint
+      const response = await axios.post(userTBapiURL, { userID, userTimeZone }) // Replace with your actual API endpoint
       const timeblocks = response.data.timeBlocks // Assuming the response is an array of timeblocks
       console.log(timeblocks)
       return timeblocks

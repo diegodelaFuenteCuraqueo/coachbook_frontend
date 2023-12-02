@@ -1,8 +1,9 @@
 import React, { useEffect, useState  } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
-import { useAuth } from '../context/AuthContext' // Import the useAuth hook
-import { URL } from '../constants.js'
+import { useAuth } from '../../context/AuthContext.js' // Import the useAuth hook
+import { URL } from '../../constants.js'
+import '../../App.css'
 
 const editTBApiUrl = URL.LOCALHOST + URL.API.editTimeBlock
 const getTBApiUrl = URL.LOCALHOST + URL.API.timeBlock
@@ -66,55 +67,66 @@ const EditTimeBlock = () => {
   }
 
   return (
-    <div>
-      <h2>EditTimeBlock Time Block</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            onChange={handleChange}
-            value={formData.name}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="startDate">Start Date</label>
-          <input
-            type="datetime-local"
-            name="startDate"
-            id="startDate"
-            onChange={handleChange}
-            value={formData.startDate}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="endDate">End Date</label>
-          <input
-            type="datetime-local"
-            name="endDate"
-            id="endDate"
-            onChange={handleChange}
-            value={formData.endDate}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="endDate">ClientID</label>
-          <input
-            type="text"
-            name="clientID"
-            id="clientID"
-            onChange={handleChange}
-            value={formData.clientID}
-          />
-        </div>
-        <button type="submit">Update timeblock</button>
-      </form>
+    <>
+    <div className="container login-form-container">
+      <h2 className="login-form-title">EditTimeBlock Time Block</h2>
+
+      <div className="login-input-container">
+        <form onSubmit={handleSubmit}>
+          <div className="login-input-container">
+            <label className="login-label" htmlFor="name">Name</label>
+            <input
+              className="login-input-field"
+              type="text"
+              name="name"
+              id="name"
+              onChange={handleChange}
+              value={formData.name}
+              required
+            />
+          </div>
+          <div className="login-input-container">
+            <label className="login-label" htmlFor="startDate">Start Date</label>
+            <input
+              className="login-input-field"
+              type="datetime-local"
+              name="startDate"
+              id="startDate"
+              onChange={handleChange}
+              value={formData.startDate}
+              required
+            />
+          </div>
+          <div className="login-input-container">
+            <label className="login-label" htmlFor="endDate">End Date</label>
+            <input
+              className="login-input-field"
+              type="datetime-local"
+              name="endDate"
+              id="endDate"
+              onChange={handleChange}
+              value={formData.endDate}
+              required
+            />
+          </div>
+          <div className="login-input-container">
+            <label className="login-label" htmlFor="endDate">ClientID</label>
+            <input
+              className="login-input-field"
+              type="text"
+              name="clientID"
+              id="clientID"
+              onChange={handleChange}
+              value={formData.clientID}
+            />
+          </div>
+          <div className="login-input-container">
+            <button className="btn btn-primary" type="submit">Update timeblock</button>
+          </div>
+        </form>
+      </div>
     </div>
+    </>
   )
 }
 

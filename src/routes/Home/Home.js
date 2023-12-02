@@ -1,17 +1,19 @@
 // src/components/HomePage.js
 import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext.js'
 import axios from 'axios'
-import { URL } from '../constants.js'
+import { URL } from '../../constants.js'
+import '../../App.css'
 
 const userTBapiURL = URL.LOCALHOST + URL.API.userTimeBlocks
 const deleteTBapiURL = URL.LOCALHOST + URL.API.deleteTimeBlock
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
-const HomePage = () => {
+const Home = () => {
 
   const navigate = useNavigate()
-  const { isAuthenticated, logout, user } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const [ timeblocks, setTimeblocks] = useState([])
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const HomePage = () => {
   const fetchUserTimeblocks = async (userID) => {
     try {
       console.log('fetchUserTimeblocks', userID)
-      const response = await axios.post(userTBapiURL, { userID }) // Replace with your actual API endpoint
+      const response = await axios.post(userTBapiURL, { userID, userTimeZone}) // Replace with your actual API endpoint
       const timeblocks = response.data.timeBlocks // Assuming the response is an array of timeblocks
       console.log(timeblocks)
       return timeblocks
@@ -64,36 +66,33 @@ const HomePage = () => {
 
   return (
     <>
-      <div>
-        <h1>Welcome, {user?.username || ""} !</h1>
+      <div className="home-user-summary">
+        <h1 className="home-welcome-title">Welcome, {user?.username || ""} !</h1>
         <ul>
-          <li>Usertype: {user?.usertype || ""}</li>
-          <li>email: {user?.email || ""}</li>
-          <li>registered on: {user?.registerDate || ""}</li>
-          <li>id: {user?._id || ""}</li>
+          <li className="home-timeblock-li">Usertype: {user?.usertype || ""}</li>
+          <li className="home-timeblock-li">email: {user?.email || ""}</li>
+          <li className="home-timeblock-li">registered on: {user?.registerDate || ""}</li>
+          <li className="home-timeblock-li">id: {user?._id || ""}</li>
         </ul>
-        <button onClick={() => { navigate('/create-timeblock') }}>Create timeblock</button>
-        <button onClick={() => { navigate('/pick-timeblock') }}>Pick timeblock</button>
-        <button onClick={() => { logout(); navigate('/login') }}>Log out</button>
       </div>
-      <div>
-        <h2>Your Timeblocks:</h2>
-        <ul>
-          { timeblocks.map((timeblock) => (
-              <li key={timeblock._id}>
-                <div style={{ border : "1px solid black"}}>
+      <div className="container home-timeblock-container">
+        <h2 className="login-form-title">Your Timeblocks:</h2>
+        <ul className="home-timeblock-ul">
+          { timeblocks && timeblocks.map((timeblock) => (
+              <li key={timeblock._id} className="home-timeblock-li">
+                <div className="home-timeblock-li-element" style={{ border : "1px solid black"}}>
                   <div>
                     <p>Name: {timeblock.name}</p>
-                    <p>Start Date: {timeblock.startDate}</p>
-                    <p>End Date: {timeblock.endDate}</p>
+                    <p>Start Date: { timeblock.startDate}</p>
+                    <p>End Date: { timeblock.endDate}</p>
                     { !timeblock?.available && timeblock.clientID?._id
                       ? <p>Client: {timeblock.clientID?.username}</p>
                       : <p>Available</p>
                     }
                   </div>
                   <div>
-                    <button onClick={() => { editTimeBlock(timeblock._id) }}>Edit</button>
-                    <button onClick={() => { deleteTimeblock(timeblock._id) }}>Delete</button>
+                    <button className="btn btn-primary" onClick={() => { editTimeBlock(timeblock._id) }}>Edit</button>
+                    <button className="btn btn-danger" onClick={() => { deleteTimeblock(timeblock._id) }}>Delete</button>
                     </div>
                 </div>
               </li>
@@ -106,4 +105,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage
+export default Home

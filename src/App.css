@@ -36,3 +36,92 @@
     transform: rotate(360deg);
   }
 }
+
+nav {
+  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.1) 35%, rgba(0,212,255,.1) 100%);
+}
+
+body {
+  background-image: url("../public/wavesBackground.jpg");
+}
+
+.login-label {
+  color: white;
+}
+
+.login-form-title {
+  text-align: center;
+  margin-bottom: 40px;
+  color: white;
+}
+
+.login-form-container{
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 100px;
+  width: 500px;
+  background: rgb(2,0,36);
+  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: gray 10px 10px 20px 0px;
+}
+
+.login-input-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px auto;
+  width: 80%
+}
+
+.login-input-field {
+  width: 100%;
+}
+
+.home-welcome-title {
+  text-align: left;
+  margin-bottom: 30px;
+  color: Black;
+}
+
+.home-timeblock-container {
+  padding: 20px 20px;
+  border-radius: 12px;
+  width: 600px;
+  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.1) 35%, rgba(0,212,255,.1) 100%);
+}
+
+.home-timeblock-ul {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 12px;
+  width: 500px;
+  padding: 24px;
+}
+
+.home-user-summary {
+  display: flex;
+  margin-top: 50px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 50px;
+  padding: 16px 16px;
+  width: 100%;
+  background-color: rgba(255,255,255,.5);
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.home-timeblock-li {
+  list-style-type: none;
+  margin-bottom: 10px;
+
+}
+
+.home-timeblock-li-element {
+  border: 1px solid rgb(68, 60, 60);
+  background-color: rgba(255,255,255,.5);
+  padding: 20px 20px;
+  border-radius: 24px;
+  margin-bottom:32px;
+}

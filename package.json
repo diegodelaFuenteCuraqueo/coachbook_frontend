@@ -1,13 +1,15 @@
 {
-  "homepage":"https://diegodelafuentecuraqueo.github.io/emuna_frontend/#",
+  "homepage": "https://diegodelafuentecuraqueo.github.io/emuna_frontend/#",
   "name": "emuna_frontend",
   "version": "0.1.0",
   "private": false,
   "dependencies": {
+    "@babel/traverse": ">=7.23.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.5.0",
+    "bootstrap": "^5.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.0.0",
@@ -41,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/traverse": ">=7.23.2",
     "gh-pages": "^6.0.0"
   }
 }
