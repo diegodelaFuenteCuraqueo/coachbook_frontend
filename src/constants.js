@@ -17,5 +17,5 @@ export const URL = {
     //editBooking: '/api/edit-booking',
   },
   LOCALHOST: "http://localhost:5000", // "http://192.168.101.8:5000" "https://emuna-backend.vercel.app/"
-  VERCEL_HOST: "https://emuna-backend.vercel.app/api",
+  VERCEL_HOST: "https://emuna-backend.vercel.app",
 }
