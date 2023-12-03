@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../../context/AuthContext'
-import { URL } from '../../constants'
 import '../../App.css'
+import { getEndpointURL } from '../../utils/getEndpointURL'
 
-const { LOCALHOST, API } = URL
-const coachesApiUrl = LOCALHOST + API.coaches
-const userTBapiURL = LOCALHOST + API.userTimeBlocks
-const bookTBapiURL = LOCALHOST + API.bookTimeBlock
+const coachesApiUrl = getEndpointURL("coaches") // LOCALHOST + API.coaches
+const userTBapiURL = getEndpointURL("userTimeBlocks") // LOCALHOST + API.userTimeBlocks
+const bookTBapiURL = getEndpointURL("bookTimeBlock") // LOCALHOST + API.bookTimeBlock
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 function PickTimeBlock() {

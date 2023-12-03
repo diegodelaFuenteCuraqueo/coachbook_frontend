@@ -3,11 +3,12 @@ import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.js'
 import axios from 'axios'
-import { URL } from '../../constants.js'
 import '../../App.css'
+import { getEndpointURL } from '../../utils/getEndpointURL'
 
-const userTBapiURL = URL.LOCALHOST + URL.API.userTimeBlocks
-const deleteTBapiURL = URL.LOCALHOST + URL.API.deleteTimeBlock
+const userTBapiURL = getEndpointURL("userTimeBlocks") //URL.LOCALHOST + URL.API.userTimeBlocks
+const deleteTBapiURL = getEndpointURL("deleteTimeBlock") //URL.LOCALHOST + URL.API.deleteTimeBlock
+
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 const Home = () => {
@@ -18,7 +19,7 @@ const Home = () => {
 
   useEffect(() => {
     console.log('HomePage', isAuthenticated, user)
-    fetchTimeblocks()
+    //fetchTimeblocks()
   }, [])
 
   useEffect(() => {

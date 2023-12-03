@@ -3,11 +3,11 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import axios from 'axios'
-import { URL } from '../../constants'
 import '../../App.css'
 import Navbar from '../../components/NavBar'
+import { getEndpointURL } from '../../utils/getEndpointURL'
 
-const apiUrl = URL.LOCALHOST + URL.API.login
+const apiUrl = getEndpointURL('login')
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -21,7 +21,7 @@ function Login() {
     console.log('Login clicked', { email, password })
     setLogMessage('')
     try {
-      const response = await axios.post(apiUrl, { email, password })
+      const response = await axios.post( apiUrl, { email, password })
       console.log('Login response:', response.data)
       console.log('isAuthenticated:', isAuthenticated)
       //setToken(response.data.token)

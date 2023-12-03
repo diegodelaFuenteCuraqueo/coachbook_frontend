@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../../context/AuthContext.js'
-import { URL } from '../../constants.js'
 import '../../App.css'
+import { getEndpointURL } from '../../utils/getEndpointURL'
 
-const apiUrl = URL.LOCALHOST + URL.API.register
+const apiUrl = getEndpointURL('register')
 
 function Register() {
   const navigate = useNavigate()
@@ -46,12 +46,12 @@ function Register() {
   return (
     <>
     <div className="container login-form-container">
-      <h1 className="login-form-title"> Register</h1>
+      <h1 className="login-form-title"> Nuevo usuario</h1>
 
       <div className="login-input-container">
         <form onSubmit={handleSubmit}>
           <div className="login-input-container">
-            <label className="login-label" htmlFor="username">Username</label>
+            <label className="login-label" htmlFor="username">Nombre de usuario</label>
             <input
               className="login-input-field"
               type="text"
@@ -59,6 +59,7 @@ function Register() {
               id="username"
               onChange={handleChange}
               value={formData.username}
+              placeholder="Nombre de usuario"
               required
             />
           </div>
@@ -71,6 +72,7 @@ function Register() {
               id="password"
               onChange={handleChange}
               value={formData.password}
+              placeholder="Password"
               required
             />
           </div>
@@ -83,6 +85,7 @@ function Register() {
               id="email"
               onChange={handleChange}
               value={formData.email}
+              placeholder="email"
               required
             />
           </div>

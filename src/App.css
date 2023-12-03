@@ -61,10 +61,10 @@ body {
   margin-top: 100px;
   width: 500px;
   background: rgb(2,0,36);
-  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.6) 35%, rgba(0,212,255,.6) 100%);
   padding: 32px;
   border-radius: 20px;
-  box-shadow: gray 10px 10px 20px 0px;
+  box-shadow: rgb(55, 55, 55) 10px 10px 20px 0px;
 }
 
 .login-input-container {

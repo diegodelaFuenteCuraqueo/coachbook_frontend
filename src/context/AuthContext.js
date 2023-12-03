@@ -1,9 +1,9 @@
 // src/context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
-import { URL } from '../constants.js'
+import { getEndpointURL } from '../utils/getEndpointURL'
 
-const apiUrl = URL.LOCALHOST + URL.API.user
+const apiUrl = getEndpointURL('user')
 
 const AuthContext = createContext()
 
@@ -56,7 +56,8 @@ export function AuthProvider({ children }) {
       //const response = await axios.post(apiUrl+'/api/user', { id }) // Replace with your actual API endpoint
       const response = await axios.post(apiUrl, { id }) // Replace with your actual API endpoint
 
-      const u = response.data.user // Assuming the response is an array of timeblocks
+      const u = response.data.user
+      //delete u.password
       console.log(u)
       // Set the timeblocks in your component's state or context if necessary
       setUser(u)

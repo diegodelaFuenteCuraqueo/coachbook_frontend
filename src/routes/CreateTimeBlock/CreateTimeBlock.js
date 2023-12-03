@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../../context/AuthContext.js' // Import the useAuth hook
-import { URL } from '../../constants.js'
+import { getEndpointURL } from '../../utils/getEndpointURL'
 
-const apiUrl = URL.LOCALHOST + URL.API.saveTimeBlock
+const apiUrl = getEndpointURL('saveTimeBlock')
 
 const CreateTimeBlock = () => {
   const navigate = useNavigate()

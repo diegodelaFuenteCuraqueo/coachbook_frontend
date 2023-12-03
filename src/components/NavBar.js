@@ -6,6 +6,7 @@ const Navbar = () => {
   const [menuVisible, setMenuVisible] = useState(false)
   const navigate = useNavigate()
   const { isAuthenticated, logout, user } = useAuth()
+  window.auth = useAuth()
 
   const handleLinkClick = (event) => {
     event.preventDefault()
@@ -29,7 +30,7 @@ const Navbar = () => {
         </button>
         <div className={`${!menuVisible ? "collapse" : ""} navbar-collapse`} id="navbarNav">
           <ul className="navbar-nav ms-auto">
-              { (isAuthenticated && user && user.usertype === 'coach')
+              { (isAuthenticated && user && (user.usertype !== 'client'))
                 ? (
                 <>
                   <li className="nav-item">
