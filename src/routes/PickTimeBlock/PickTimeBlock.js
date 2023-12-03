@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../../context/AuthContext'
 import { URL } from '../../constants'
+import '../../App.css'
 
 const { LOCALHOST, API } = URL
 const coachesApiUrl = LOCALHOST + API.coaches
@@ -89,10 +90,10 @@ function PickTimeBlock() {
 
   return (
     <>
-      <div>
-        <h1>Pick Timeblock</h1>
-        <h2>Choose a coach</h2>
-        <select onChange={(e) => setCoachID(e.target.value)}>
+      <div className="container pick-timeblock-container">
+        <h1 className="home-welcome-title">Agendar cita</h1>
+        <label >Seleccione un coach</label>
+        <select className="login-input-field" onChange={(e) => setCoachID(e.target.value)}>
           <option value="">Select a coach</option>
           {coaches.length > 0 &&
             coaches.map((coach) => (
@@ -102,26 +103,25 @@ function PickTimeBlock() {
             ))}
         </select>
       </div>
-      <h2>Choose a timeblock</h2>
-      <div>
-        <h2>Your Timeblocks:</h2>
-        <ul>
+      <div className="container home-timeblock-container">
+        <h2 className="login-form-title">Seleccione una cita:</h2>
+        <ul className="home-timeblock-ul">
           { timeblocks?.length > 0 &&
             timeblocks.map((timeblock) => (
-              <li key={timeblock._id}>
-                <div style={{ border : "1px solid black"}}>
+              <li key={timeblock._id} className="home-timeblock-li">
+                <div className="home-timeblock-li-element">
                   <div>
-                    <p>Name: {timeblock.name}</p>
-                    <p>Start Date: {timeblock.startDate}</p>
-                    <p>End Date: {timeblock.endDate}</p>
+                    <p>Nombre: {timeblock.name}</p>
+                    <p>Fecha de inicio: {timeblock.startDate}</p>
+                    <p>Fecha de fin: {timeblock.endDate}</p>
                     { !timeblock?.available && timeblock.clientID?._id
-                      ? <p>Not Available</p>
-                      : <p>Available</p>
+                      ? <p>No disponible</p>
+                      : <p>Disponible</p>
                     }
                   </div>
                   { timeblock?.available
                     ? <div>
-                        <button onClick={() => { pickBlock(timeblock._id) }}>Select</button>
+                        <button className="btn btn-primary" onClick={() => { pickBlock(timeblock._id) }}>Agendar</button>
                       </div>
                     : null
                   }

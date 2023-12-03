@@ -16,7 +16,7 @@ export const URL = {
     //cancelBooking: '/api/cancel-booking',
     //editBooking: '/api/edit-booking',
   },
-  LOCALHOST: 'http://localhost:5000',
+  LOCALHOST: 'http://192.168.101.8:5000', // "http://localhost:5000"
 
 
 }

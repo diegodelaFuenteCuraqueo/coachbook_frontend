@@ -89,7 +89,7 @@ function Register() {
           <div className="login-input-container">
             <label className="login-label" htmlFor="usertype">User type</label>
             <select className="login-input-field" name="usertype" id="usertype" onChange={handleChange} required>
-              <option value="">Select a user type</option>
+              <option value="">Indique tipo de usuario</option>
               <option value="coach">Coach</option>
               <option value="client">Client</option>
               <option value="admin">Admin</option>

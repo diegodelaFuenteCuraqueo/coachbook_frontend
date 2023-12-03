@@ -38,12 +38,12 @@ function Login() {
     <>
       <Navbar />
       <div className="container login-form-container">
-        <h1 className="login-form-title">Login</h1>
+        <h1 className="login-form-title">Iniciar sesión</h1>
         <div className="login-input-container">
           <input
             className="login-input-field"
             type="text"
-            placeholder="Username"
+            placeholder="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -61,11 +61,11 @@ function Login() {
 
         <div className="login-input-container">
           <p style={{ color: 'red' }}>{logMessage}</p>
-          <button className="btn btn-primary" onClick={handleLogin}>Login</button>
+          <button className="btn btn-primary" onClick={handleLogin}>Iniciar sesión</button>
         </div>
 
         <div className="login-input-container">
-          <button className="btn btn-secondary" onClick={() => { navigate('/register') }}>Register</button>
+          <button className="btn btn-secondary" onClick={() => { navigate('/register') }}>Registrarse</button>
         </div>
 
       </div>

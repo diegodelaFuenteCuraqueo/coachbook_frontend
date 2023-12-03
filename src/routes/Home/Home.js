@@ -67,32 +67,32 @@ const Home = () => {
   return (
     <>
       <div className="home-user-summary">
-        <h1 className="home-welcome-title">Welcome, {user?.username || ""} !</h1>
+        <h1 className="home-welcome-title">Bienvenido, {user?.username || ""} !</h1>
         <ul>
           <li className="home-timeblock-li">Usertype: {user?.usertype || ""}</li>
-          <li className="home-timeblock-li">email: {user?.email || ""}</li>
-          <li className="home-timeblock-li">registered on: {user?.registerDate || ""}</li>
-          <li className="home-timeblock-li">id: {user?._id || ""}</li>
+          <li className="home-timeblock-li">Email: {user?.email || ""}</li>
+          <li className="home-timeblock-li">Registrado el: {user?.registerDate || ""}</li>
+          <li className="home-timeblock-li">ID: {user?._id || ""}</li>
         </ul>
       </div>
       <div className="container home-timeblock-container">
-        <h2 className="login-form-title">Your Timeblocks:</h2>
+        <h2 className="login-form-title">Sus citas:</h2>
         <ul className="home-timeblock-ul">
           { timeblocks && timeblocks.map((timeblock) => (
               <li key={timeblock._id} className="home-timeblock-li">
                 <div className="home-timeblock-li-element" style={{ border : "1px solid black"}}>
                   <div>
-                    <p>Name: {timeblock.name}</p>
-                    <p>Start Date: { timeblock.startDate}</p>
-                    <p>End Date: { timeblock.endDate}</p>
+                    <p>Nombre: {timeblock.name}</p>
+                    <p>Fecha de inicio: { timeblock.startDate}</p>
+                    <p>Fecha de fin: { timeblock.endDate}</p>
                     { !timeblock?.available && timeblock.clientID?._id
-                      ? <p>Client: {timeblock.clientID?.username}</p>
-                      : <p>Available</p>
+                      ? <p>Tomada por: {timeblock.clientID?.username}</p>
+                      : <p>Disponible</p>
                     }
                   </div>
                   <div>
-                    <button className="btn btn-primary" onClick={() => { editTimeBlock(timeblock._id) }}>Edit</button>
-                    <button className="btn btn-danger" onClick={() => { deleteTimeblock(timeblock._id) }}>Delete</button>
+                    <button className="btn btn-primary" onClick={() => { editTimeBlock(timeblock._id) }}>Editar</button>
+                    <button className="btn btn-danger" onClick={() => { deleteTimeblock(timeblock._id) }}>Borrar</button>
                     </div>
                 </div>
               </li>
