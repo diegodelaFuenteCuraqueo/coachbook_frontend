@@ -6,16 +6,16 @@ import axios from 'axios'
 import '../../App.css'
 import { getEndpointURL } from '../../utils/getEndpointURL'
 
-const userTBapiURL = getEndpointURL("userTimeBlocks") //URL.LOCALHOST + URL.API.userTimeBlocks
-const deleteTBapiURL = getEndpointURL("deleteTimeBlock") //URL.LOCALHOST + URL.API.deleteTimeBlock
-
-const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 const Home = () => {
 
   const navigate = useNavigate()
   const { isAuthenticated, user } = useAuth()
   const [ timeblocks, setTimeblocks] = useState([])
+
+  const userTBapiURL = getEndpointURL(user.usertype === "client" ? "clientTimeBlocks" : "userTimeBlocks") //URL.LOCALHOST + URL.API.userTimeBlocks
+  const deleteTBapiURL = getEndpointURL("deleteTimeBlock") //URL.LOCALHOST + URL.API.deleteTimeBlock
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
   useEffect(() => {
     console.log('HomePage', isAuthenticated, user)
@@ -83,12 +83,19 @@ const Home = () => {
               <li key={timeblock._id} className="home-timeblock-li">
                 <div className="home-timeblock-li-element" style={{ border : "1px solid black"}}>
                   <div>
-                    <p>Nombre: {timeblock.name}</p>
-                    <p>Fecha de inicio: { timeblock.startDate}</p>
-                    <p>Fecha de fin: { timeblock.endDate}</p>
-                    { !timeblock?.available && timeblock.clientID?._id
-                      ? <p>Tomada por: {timeblock.clientID?.username}</p>
-                      : <p>Disponible</p>
+                    <p> Nombre: {timeblock.name}</p>
+                    <p> Fecha de inicio: { timeblock.startDate }</p>
+                    <p> Fecha de fin: { timeblock.endDate }</p>
+                    { user?.usertype !== "client"
+                      ? (
+                        !timeblock?.available && timeblock.clientID?._id
+                        ? <p> Tomada por: { timeblock.clientID?.username }</p>
+                        : <p> Disponible </p>
+                      ) : (
+                        timeblock.createdBy?.username
+                        ? <p>Coach: { timeblock.createdBy?.username } </p>
+                        : null
+                      )
                     }
                   </div>
                   <div>

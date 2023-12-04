@@ -10,6 +10,7 @@ export const URL = {
     userTimeBlocks: '/api/user-timeblocks',
     deleteTimeBlock: '/api/delete-timeblock',
     editTimeBlock: '/api/edit-timeblock',
+    clientTimeBlocks: '/api/client-timeblocks',
     //coachTimeBlocks: '/api/coach-timeblocks',
     //bookTimeBlock: '/api/book-timeblock',
     bookTimeBlock: '/api/book-timeblock',
