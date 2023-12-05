@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.js'
 import axios from 'axios'
 import '../../App.css'
+import UserSummary from '../../components/UserSummary.js'
+import TimeBlockCard from '../../components/TimeBlockCard.js'
+import Calendar from '../../components/Calendar.js'
 import { getEndpointURL } from '../../utils/getEndpointURL'
 
 
@@ -12,11 +15,14 @@ const Home = () => {
   const navigate = useNavigate()
   const { isAuthenticated, user } = useAuth()
   const [ timeblocks, setTimeblocks] = useState([])
+  const [ selectedEventID, setSelectedEventID] = useState({})
 
   const userTBapiURL = getEndpointURL(user.usertype === "client" ? "clientTimeBlocks" : "userTimeBlocks") //URL.LOCALHOST + URL.API.userTimeBlocks
   const deleteTBapiURL = getEndpointURL("deleteTimeBlock") //URL.LOCALHOST + URL.API.deleteTimeBlock
+  const createTBapiURL = getEndpointURL("saveTimeBlock") //URL.LOCALHOST + URL.API.saveTimeBlock
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
+  console.log("asdasd ", timeblocks, selectedEventID )
   useEffect(() => {
     console.log('HomePage', isAuthenticated, user)
     //fetchTimeblocks()
@@ -29,8 +35,10 @@ const Home = () => {
 
   const fetchTimeblocks = async () => {
     if (user && isAuthenticated) {
-      console.log('fetchTimeblocks', user)
-      setTimeblocks(await fetchUserTimeblocks(user._id))
+      const tbs = await fetchUserTimeblocks(user._id)
+      console.log('fetchTimeblocks', user, tbs)
+
+      setTimeblocks(tbs)
     } else {
       console.log('fetchTimeblocks to login', user)
       navigate('/')
@@ -42,17 +50,34 @@ const Home = () => {
       console.log('fetchUserTimeblocks', userID)
       const response = await axios.post(userTBapiURL, { userID, userTimeZone}) // Replace with your actual API endpoint
       const timeblocks = response.data.timeBlocks // Assuming the response is an array of timeblocks
-      console.log(timeblocks)
+      window.timeblocks = timeblocks
       return timeblocks
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
     }
   }
 
+  const createTimeblock = async (formData) => {
+    console.log('createTimeblock', formData)
+    try {
+      console.log('handleSubmit', formData)
+      const response = await axios.post(createTBapiURL, {formData, user})
+      console.log("response", response)
+      fetchTimeblocks()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const deleteTimeblock = async (timeblockID) => {
     try {
       console.log('deleteTimeblock', timeblockID)
-      const response = await axios.post(deleteTBapiURL, { timeblockID, _id: user._id }) // Replace with your actual API endpoint
+      const selectedTimeblock = timeblocks.find( tb => tb._id === timeblockID )
+      if (!selectedTimeblock) return
+      const confirm = window.confirm("¿Está seguro que desea eliminar la cita? \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      if (!confirm) return
+
+      const response = await axios.post(deleteTBapiURL, { timeblockID, user }) // Replace with your actual API endpoint
       console.log(response)
       fetchTimeblocks()
     } catch (error) {
@@ -65,50 +90,65 @@ const Home = () => {
     navigate(`/edit-timeblock`, { state: { timeblockID } })
   }
 
+  const bookTimeBlock = async (timeblockID) => {
+    console.log('bookTimeBlock', timeblockID)
+    try {
+      const selectedTimeblock = timeblocks.find( tb => tb._id === timeblockID )
+      if (!selectedTimeblock) return
+      const confirm = window.confirm("¿Está seguro que desea reservar la cita? \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      if (!confirm) return
+
+      const response = await axios.post(getEndpointURL("bookTimeBlock"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
+      console.log(" BOOKING RESPONSE: ", response)
+      fetchTimeblocks()
+    } catch (error) {
+      console.error('Error booking timeblocks:', error)
+    }
+  }
+
+  const cancelBooking = async (timeblockID) => {
+    console.log('cancelBooking', timeblockID)
+    try {
+      const selectedTimeblock = timeblocks.find( tb => tb._id === selectedEventID )
+      console.log("selectedTimeblock", selectedTimeblock)
+      if (!selectedTimeblock) return
+      const confirm = window.confirm("¿Está seguro que desea anular la cita? (quedará como disponible) \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      if (!confirm) return
+
+      const response = await axios.post(getEndpointURL("cancelBooking"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
+      console.log(" CANCEL BOOKING RESPONSE: ", response)
+      fetchTimeblocks()
+    } catch (error) {
+      console.error('Error canceling timeblocks:', error)
+    }
+  }
+
   return (
     <>
-      <div className="home-user-summary">
-        <h1 className="home-welcome-title">Bienvenido, {user?.username || ""} !</h1>
-        <ul>
-          <li className="home-timeblock-li">Usertype: {user?.usertype || ""}</li>
-          <li className="home-timeblock-li">Email: {user?.email || ""}</li>
-          <li className="home-timeblock-li">Registrado el: {user?.registerDate || ""}</li>
-          <li className="home-timeblock-li">ID: {user?._id || ""}</li>
-        </ul>
-      </div>
-      <div className="container home-timeblock-container">
-        <h2 className="login-form-title">Sus citas:</h2>
-        <ul className="home-timeblock-ul">
-          { timeblocks && timeblocks.map((timeblock) => (
-              <li key={timeblock._id} className="home-timeblock-li">
-                <div className="home-timeblock-li-element" style={{ border : "1px solid black"}}>
-                  <div>
-                    <p> Nombre: {timeblock.name}</p>
-                    <p> Fecha de inicio: { timeblock.startDate }</p>
-                    <p> Fecha de fin: { timeblock.endDate }</p>
-                    { user?.usertype !== "client"
-                      ? (
-                        !timeblock?.available && timeblock.clientID?._id
-                        ? <p> Tomada por: { timeblock.clientID?.username }</p>
-                        : <p> Disponible </p>
-                      ) : (
-                        timeblock.createdBy?.username
-                        ? <p>Coach: { timeblock.createdBy?.username } </p>
-                        : null
-                      )
-                    }
-                  </div>
-                  <div>
-                    <button className="btn btn-primary" onClick={() => { editTimeBlock(timeblock._id) }}>Editar</button>
-                    <button className="btn btn-danger" onClick={() => { deleteTimeblock(timeblock._id) }}>Borrar</button>
-                    </div>
-                </div>
-              </li>
-          ))}
-        </ul>
-      </div>
+      <UserSummary user={user} />
 
-      <br/>
+      <div className="container home-timeblock-container">
+        <h2 className="login-form-title">Agenda</h2>
+        <p> Usted tiene {timeblocks?.length || 0 } citas { user.usertype === "client" ? "solicitadas" : "creadas" }</p>
+        { user.usertype === "client"
+          ?<p> Acá puede ver las citas que ya ha solicitado. Puede ver el detalle de una cita solicitada al hacer click en el calendario. <br/>También solicitar una nueva cita haciendo click en <button className="btn btn-primary" onClick={() => navigate("/pick-timeblock")}>Agendar una cita</button></p>
+          :<p> Para crear nuevas citas, haga click en el calendario. <br/>También puede ver el detalle de las citas creadas seleccionándolas en el calendario</p>
+        }
+        <TimeBlockCard
+          timeblock={ timeblocks.find( tb => tb._id === selectedEventID  ) }
+          user={user}
+          editTimeBlock={editTimeBlock}
+          deleteTimeblock={deleteTimeblock}
+          bookTimeBlock={bookTimeBlock}
+          cancelBooking={cancelBooking}
+        />
+        <Calendar
+          timeblocks={timeblocks}
+          user={user}
+          setSelectedEventID={setSelectedEventID}
+          createTimeblock={createTimeblock}
+        />
+      </div>
     </>
   )
 }

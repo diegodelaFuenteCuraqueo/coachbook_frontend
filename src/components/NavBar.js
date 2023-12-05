@@ -37,15 +37,8 @@ const Navbar = () => {
                     <a className="nav-link" onClick={handleLinkClick} href="/home">Home</a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" onClick={handleLinkClick} href="/pick-timeblock">Agendar una cita</a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" onClick={handleLinkClick} href="/create-timeblock">Crear una cita</a>
-                  </li>
-                  <li className="nav-item">
                     <a className="nav-link" onClick={handleLinkClick} href="/register">Registar usuario</a>
                   </li>
-
                   <li className="nav-item">
                     <a className="nav-link" onClick={handleLinkClick} href="/logout">Cerrar sesión</a>
                   </li>

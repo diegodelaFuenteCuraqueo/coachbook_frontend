@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import axios from 'axios'
 import '../../App.css'
-import Navbar from '../../components/NavBar'
 import { getEndpointURL } from '../../utils/getEndpointURL'
 
 const apiUrl = getEndpointURL('login')
@@ -22,10 +21,6 @@ function Login() {
     setLogMessage('')
     try {
       const response = await axios.post( apiUrl, { email, password })
-      console.log('Login response:', response.data)
-      console.log('isAuthenticated:', isAuthenticated)
-      //setToken(response.data.token)
-      //setUser(response.data.userPayload.id)
       login(response.data)
       navigate(`/home`)
     } catch (error) {
@@ -36,13 +31,12 @@ function Login() {
 
   return (
     <>
-      <Navbar />
       <div className="container login-form-container">
         <h1 className="login-form-title">Iniciar sesión</h1>
         <div className="login-input-container">
           <input
             className="login-input-field"
-            type="text"
+            type="email"
             placeholder="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -63,11 +57,6 @@ function Login() {
           <p style={{ color: 'red' }}>{logMessage}</p>
           <button className="btn btn-primary" onClick={handleLogin}>Iniciar sesión</button>
         </div>
-
-        <div className="login-input-container">
-          <button className="btn btn-secondary" onClick={() => { navigate('/register') }}>Registrarse</button>
-        </div>
-
       </div>
     </>
   )

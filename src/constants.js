@@ -14,7 +14,7 @@ export const URL = {
     //coachTimeBlocks: '/api/coach-timeblocks',
     //bookTimeBlock: '/api/book-timeblock',
     bookTimeBlock: '/api/book-timeblock',
-    //cancelBooking: '/api/cancel-booking',
+    cancelBooking: '/api/cancel-booking',
     //editBooking: '/api/edit-booking',
   },
   LOCALHOST: "http://localhost:5000", // "http://192.168.101.8:5000" "https://emuna-backend.vercel.app/"

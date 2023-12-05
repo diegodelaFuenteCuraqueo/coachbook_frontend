@@ -10,19 +10,19 @@ const apiUrl = getEndpointURL('register')
 
 function Register() {
   const navigate = useNavigate()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
 
   useEffect(() => {
-    if (isAuthenticated) {
-      console.log("is auth")
+    if (user.usertype === 'client' || !isAuthenticated) {
       navigate('/home')
     }
-  }, [])
+  }, [ user, isAuthenticated ])
 
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    email: ''
+    email: '',
+    requesterID: user._id,
   })
 
   const handleChange = (e) => {

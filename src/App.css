@@ -87,8 +87,22 @@ body {
 .home-timeblock-container {
   padding: 20px 20px;
   border-radius: 12px;
-  width: 600px;
-  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.1) 35%, rgba(0,212,255,.1) 100%);
+  width: 900px;
+  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.5) 35%, rgba(0,212,255,.5) 100%);
+}
+
+h2 {
+  text-align: center;
+  font-size: 36px;
+  color: white;
+  text-shadow: 2px 2px 2px black;
+}
+
+p {
+  text-align: justify;
+  font-size: 26px;
+  color: white;
+  text-shadow: 2px 2px 2px black;
 }
 
 .pick-timeblock-container {

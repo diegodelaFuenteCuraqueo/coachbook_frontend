@@ -4,6 +4,8 @@ import axios from 'axios'
 import { useAuth } from '../../context/AuthContext'
 import '../../App.css'
 import { getEndpointURL } from '../../utils/getEndpointURL'
+import TimeBlockCard from '../../components/TimeBlockCard.js'
+import Calendar from '../../components/Calendar.js'
 
 const coachesApiUrl = getEndpointURL("coaches") // LOCALHOST + API.coaches
 const userTBapiURL = getEndpointURL("userTimeBlocks") // LOCALHOST + API.userTimeBlocks
@@ -15,6 +17,7 @@ function PickTimeBlock() {
   const [coaches, setCoaches] = useState([])
   const [coachID, setCoachID] = useState('')
   const [timeblocks, setTimeblocks] = useState([])
+  const [selectedEventID, setSelectedEventID] = useState({})
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -53,10 +56,11 @@ function PickTimeBlock() {
     }
   }, [coachID])
 
-  const fetchCoachTimeblocks = async (id) => {
+  const fetchCoachTimeblocks = async (id = coachID) => {
     if (user && isAuthenticated) {
       console.log('fetchCoachTimeblocks', id)
-      setTimeblocks(await fetchUserTimeblocks(id))
+      const coachTimeblocks = await fetchUserTimeblocks(id)
+      setTimeblocks(coachTimeblocks.filter( tb => tb.available))
     } else {
       console.log('fetchCoachTimeblocks to login', user)
       navigate('/')
@@ -75,13 +79,46 @@ function PickTimeBlock() {
     }
   }
 
-  const pickBlock = async (timeblockID) => {
+  const bookTimeBlock = async (timeblockID) => {
+    console.log('bookTimeBlock', timeblockID)
+    try {
+      const selectedTimeblock = timeblocks.find( tb => tb._id === timeblockID )
+      if (!selectedTimeblock) return
+      const confirm = window.confirm("¿Está seguro que desea reservar la cita? \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      if (!confirm) return
+
+      const response = await axios.post(getEndpointURL("bookTimeBlock"), { timeblockID, clientID: user._id }) // Replace with your actual API endpoint
+      console.log(" BOOKING RESPONSE: ", response)
+      fetchCoachTimeblocks()
+    } catch (error) {
+      console.error('Error booking timeblocks:', error)
+    }
+  }
+
+  const cancelBooking = async (timeblockID) => {
+    console.log('cancelBooking', timeblockID)
+    try {
+      const selectedTimeblock = timeblocks.find( tb => tb._id === selectedEventID )
+      console.log("selectedTimeblock", selectedTimeblock)
+      if (!selectedTimeblock) return
+      const confirm = window.confirm("¿Está seguro que desea anular la cita? \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      if (!confirm) return
+
+      const response = await axios.post(getEndpointURL("cancelBooking"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
+      console.log(" CANCEL BOOKING RESPONSE: ", response)
+      fetchCoachTimeblocks()
+    } catch (error) {
+      console.error('Error canceling timeblocks:', error)
+    }
+  }
+
+
+  const pickTimeblock = async (timeblockID) => {
     try {
       console.log('pickBlock', timeblocks)
       const response = await axios.post(bookTBapiURL, { timeblockID, clientID: user._id }) // Replace with your actual API endpoint
       console.log({ timeblockID: timeblocks[0]._id, clientID: user._id }, response)
       fetchCoachTimeblocks(coachID)
-      //navigate(`/home`)
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
     }
@@ -91,6 +128,9 @@ function PickTimeBlock() {
     <>
       <div className="container pick-timeblock-container">
         <h1 className="home-welcome-title">Agendar cita</h1>
+        <p> Para solicitar una cita, primero debe seleccionar un coach de la lista. El calendario desplegará los horarios disponibles del coach indicado.
+        <br/> Para reservar una cita, seleccione un horario disponible y presione el botón "Reservar".
+        </p>
         <label >Seleccione un coach</label>
         <select className="login-input-field" onChange={(e) => setCoachID(e.target.value)}>
           <option value="">Select a coach</option>
@@ -104,30 +144,13 @@ function PickTimeBlock() {
       </div>
       <div className="container home-timeblock-container">
         <h2 className="login-form-title">Seleccione una cita:</h2>
-        <ul className="home-timeblock-ul">
-          { timeblocks?.length > 0 &&
-            timeblocks.map((timeblock) => (
-              <li key={timeblock._id} className="home-timeblock-li">
-                <div className="home-timeblock-li-element">
-                  <div>
-                    <p>Nombre: {timeblock.name}</p>
-                    <p>Fecha de inicio: {timeblock.startDate}</p>
-                    <p>Fecha de fin: {timeblock.endDate}</p>
-                    { !timeblock?.available && timeblock.clientID?._id
-                      ? <p>No disponible</p>
-                      : <p>Disponible</p>
-                    }
-                  </div>
-                  { timeblock?.available
-                    ? <div>
-                        <button className="btn btn-primary" onClick={() => { pickBlock(timeblock._id) }}>Agendar</button>
-                      </div>
-                    : null
-                  }
-                </div>
-              </li>
-          ))}
-        </ul>
+        <TimeBlockCard
+          timeblock={ timeblocks.find( tb => tb._id === selectedEventID  ) }
+          user={user}
+          bookTimeBlock={bookTimeBlock}
+          cancelBooking={cancelBooking}
+        />
+        <Calendar user={user} timeblocks={timeblocks}  setSelectedEventID={setSelectedEventID} />
       </div>
 
     </>
