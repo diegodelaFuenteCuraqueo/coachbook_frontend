@@ -8,9 +8,6 @@ import { DateFormater } from '../../utils/DateFormater'
 import TimeBlockCard from '../../components/TimeBlockCard.js'
 import Calendar from '../../components/Calendar.js'
 
-const coachesApiUrl = getEndpointURL("coaches") // LOCALHOST + API.coaches
-const userTBapiURL = getEndpointURL("userTimeBlocks") // LOCALHOST + API.userTimeBlocks
-const bookTBapiURL = getEndpointURL("bookTimeBlock") // LOCALHOST + API.bookTimeBlock
 const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 function PickTimeBlock() {
@@ -36,12 +33,12 @@ function PickTimeBlock() {
 
   const fetchCoachList = async () => {
     try {
-      const response = await axios.get(coachesApiUrl)
+      const response = await axios.get(getEndpointURL("coaches"))
       const coachesData = response.data.coaches
       return coachesData
     } catch (error) {
       console.error('Error fetching coaches:', error)
-      throw error // Propagate the error to handle it in useEffect
+      throw error
     }
   }
 
@@ -64,8 +61,8 @@ function PickTimeBlock() {
 
   const fetchUserTimeblocks = async (userID) => {
     try {
-      const response = await axios.post(userTBapiURL, { userID, userTimeZone }) // Replace with your actual API endpoint
-      const timeblocks = response.data.timeBlocks // Assuming the response is an array of timeblocks
+      const response = await axios.post(getEndpointURL("userTimeBlocks"), { userID, userTimeZone })
+      const timeblocks = response.data.timeBlocks
       return timeblocks
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
@@ -78,8 +75,7 @@ function PickTimeBlock() {
       if (!selectedTimeblock) return
       const confirm = window.confirm("¿Está seguro que desea reservar la cita? \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
-
-      const response = await axios.post(getEndpointURL("bookTimeBlock"), { timeblockID, clientID: user._id }) // Replace with your actual API endpoint
+      await axios.post(getEndpointURL("bookTimeBlock"), { timeblockID, clientID: user._id })
       fetchCoachTimeblocks()
     } catch (error) {
       console.error('Error booking timeblocks:', error)
@@ -90,23 +86,13 @@ function PickTimeBlock() {
     try {
       const selectedTimeblock = timeblocks.find( tb => tb._id === selectedEventID )
       if (!selectedTimeblock) return
-      const confirm = window.confirm("¿Está seguro que desea anular la cita? \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
+      const confirm = window.confirm("¿Está seguro que desea anular la cita? (quedará disponible para otro coachee) \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
 
-      const response = await axios.post(getEndpointURL("cancelBooking"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
+      await axios.post(getEndpointURL("cancelBooking"), { timeblockID, _id: user._id })
       fetchCoachTimeblocks()
     } catch (error) {
       console.error('Error canceling timeblocks:', error)
-    }
-  }
-
-
-  const pickTimeblock = async (timeblockID) => {
-    try {
-      const response = await axios.post(bookTBapiURL, { timeblockID, clientID: user._id }) // Replace with your actual API endpoint
-      fetchCoachTimeblocks(coachID)
-    } catch (error) {
-      console.error('Error fetching timeblocks:', error)
     }
   }
 
@@ -131,12 +117,12 @@ function PickTimeBlock() {
       <div className="container home-timeblock-container fixed">
         <h2 className="login-form-title">Seleccione una cita:</h2>
         <TimeBlockCard
-          timeblock={ timeblocks.find( tb => tb._id === selectedEventID  ) }
-          user={user}
-          bookTimeBlock={bookTimeBlock}
-          cancelBooking={cancelBooking}
+          timeblock={ timeblocks.find(tb => tb._id === selectedEventID) }
+          user={ user }
+          bookTimeBlock={ bookTimeBlock }
+          cancelBooking={ cancelBooking }
         />
-        <Calendar user={user} timeblocks={timeblocks}  setSelectedEventID={setSelectedEventID} />
+        <Calendar user={ user } timeblocks={ timeblocks }  setSelectedEventID={ setSelectedEventID } />
       </div>
 
     </>

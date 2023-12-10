@@ -1,4 +1,3 @@
-// src/context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import { getEndpointURL } from '../utils/getEndpointURL'
@@ -20,6 +19,7 @@ export function AuthProvider({ children }) {
     const ls_token = localStorage.getItem('token')
     const ls_user = localStorage.getItem('userID')
     try {
+      if (!ls_token || !ls_user) return
       fetchUserData(ls_user)
       setToken(ls_token)
     } catch (error) {
@@ -47,8 +47,7 @@ export function AuthProvider({ children }) {
 
   const fetchUserData = async (id) => {
     try {
-      const response = await axios.post(apiUrl, { id }) // Replace with your actual API endpoint
-
+      const response = await axios.post(apiUrl, { id })
       const u = response.data.user
       setUser(u)
       return u

@@ -44,7 +44,6 @@ const Calendar = ({ timeblocks, user, setSelectedEventID, createTimeblock }) => 
   }
 
   const handleSelectSlot = ({ start, end }) => {
-    console.log("handleSelectSlot")
     if (user.usertype === "client") return // el cliente solo clieckea eventos ya creados
     const minimumDuration = 60 * 60 * 1000
 
@@ -87,7 +86,6 @@ const Calendar = ({ timeblocks, user, setSelectedEventID, createTimeblock }) => 
       style: style
     }
   }
-
 
   return (
     <>

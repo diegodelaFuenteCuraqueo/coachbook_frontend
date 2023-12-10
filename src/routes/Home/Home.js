@@ -10,7 +10,6 @@ import Calendar from '../../components/Calendar.js'
 import { DateFormater } from '../../utils/DateFormater.js'
 import { getEndpointURL } from '../../utils/getEndpointURL'
 
-
 const Home = () => {
 
   const navigate = useNavigate()
@@ -24,26 +23,22 @@ const Home = () => {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
   useEffect(() => {
-    console.log('HomePage:useEffect user', isAuthenticated, user)
     fetchTimeblocks()
   }, [user])
 
   const fetchTimeblocks = async () => {
     if (user && isAuthenticated) {
       const tbs = await fetchUserTimeblocks(user._id)
-      console.log('fetchTimeblocks', user, tbs)
-
       setTimeblocks(tbs)
     } else {
-      console.log('fetchTimeblocks to login', user)
       navigate('/')
     }
   }
 
   const fetchUserTimeblocks = async (userID) => {
     try {
-      const response = await axios.post(userTBapiURL, { userID, userTimeZone}) // Replace with your actual API endpoint
-      const timeblocks = response.data.timeBlocks // Assuming the response is an array of timeblocks
+      const response = await axios.post(userTBapiURL, { userID, userTimeZone})
+      const timeblocks = response.data.timeBlocks
       return timeblocks
     } catch (error) {
     }
@@ -51,7 +46,7 @@ const Home = () => {
 
   const createTimeblock = async (formData) => {
     try {
-      const response = await axios.post(createTBapiURL, {formData, user})
+      await axios.post(createTBapiURL, {formData, user})
       fetchTimeblocks()
     } catch (error) {
       console.error(error)
@@ -64,8 +59,7 @@ const Home = () => {
       if (!selectedTimeblock) return
       const confirm = window.confirm("¿Está seguro que desea eliminar la cita? \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
-
-      const response = await axios.post(deleteTBapiURL, { timeblockID, user }) // Replace with your actual API endpoint
+      await axios.post(deleteTBapiURL, { timeblockID, user })
       fetchTimeblocks()
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
@@ -82,8 +76,7 @@ const Home = () => {
       if (!selectedTimeblock) return
       const confirm = window.confirm("¿Está seguro que desea reservar la cita? \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
-
-      const response = await axios.post(getEndpointURL("bookTimeBlock"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
+      await axios.post(getEndpointURL("bookTimeBlock"), { timeblockID, _id: user._id })
       fetchTimeblocks()
     } catch (error) {
       console.error('Error booking timeblocks:', error)
@@ -94,10 +87,9 @@ const Home = () => {
     try {
       const selectedTimeblock = timeblocks.find( tb => tb._id === selectedEventID )
       if (!selectedTimeblock) return
-      const confirm = window.confirm("¿Está seguro que desea anular la cita? (quedará como disponible) \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
+      const confirm = window.confirm("¿Está seguro que desea anular la cita? (quedará disponible para otro coachee) \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
-
-      const response = await axios.post(getEndpointURL("cancelBooking"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
+      await axios.post(getEndpointURL("cancelBooking"), { timeblockID, _id: user._id })
       fetchTimeblocks()
     } catch (error) {
       console.error('Error canceling timeblocks:', error)
@@ -112,8 +104,8 @@ const Home = () => {
         <h2 className="login-form-title">Agenda</h2>
         <p> Usted tiene {timeblocks?.length || 0 } citas { user.usertype === "client" ? "solicitadas" : "creadas" }</p>
         { user.usertype === "client"
-          ?<p> Acá puede ver las citas que ya ha solicitado. Puede ver el detalle de una cita solicitada al hacer click en el calendario. <br/>También solicitar una nueva cita haciendo click en <button className="btn btn-primary" onClick={() => navigate("/pick-timeblock")}>Agendar una cita</button></p>
-          :<p> Para crear nuevas citas, haga click en el calendario. <br/>También puede ver el detalle de las citas creadas seleccionándolas en el calendario</p>
+          ?<p> Acá puede ver sus sesiones ya agendadas. Puede ver el detalle de una cita al hacer click en evento del calendario. <br/>También solicitar una nueva cita haciendo click en <button className="btn btn-primary" onClick={() => navigate("/pick-timeblock")}>Agendar una cita</button></p>
+          :<p> Para crear nuevas citas, haga click en el dia y hora en el calendario. <br/>También puede ver el detalle de cada cita haciendo click en el evento del calendario. </p>
         }
         <TimeBlockCard
           timeblock={ timeblocks.find( tb => tb._id === selectedEventID  ) }

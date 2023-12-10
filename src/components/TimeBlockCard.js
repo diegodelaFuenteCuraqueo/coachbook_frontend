@@ -15,7 +15,7 @@ function TimeBlockCard({timeblock, user, bookTimeBlock, cancelBooking, deleteTim
         { user?.usertype !== "client" && timeblock?.name
           ? (
             !timeblock?.available
-            ? <p> Tomada por: { timeblock?.clientID?.username || "" }</p>
+            ? <p> Solicitada por: { timeblock?.clientID?.username || "" }</p>
             : <p> Disponible </p>
           ) : (
             timeblock?.createdBy?.username
@@ -26,17 +26,17 @@ function TimeBlockCard({timeblock, user, bookTimeBlock, cancelBooking, deleteTim
       </div>
       <div className="home-timeblock-btn-container">
         { user?.usertype === "client" && !!timeblock && timeblock?.available
-          ? <button className="btn btn-primary" onClick={() => {  bookTimeBlock(timeblock._id)  }}>Reservar</button>
+          ? <button className="btn btn-primary" onClick={() => { bookTimeBlock(timeblock._id) }}>Reservar</button>
           : user?.usertype === "client" && !!timeblock && !timeblock?.available
-            ? <button className="btn btn-danger" onClick={() => {  cancelBooking(timeblock._id)  }}>Anular reserva</button>
+            ? <button className="btn btn-danger" onClick={() => { cancelBooking(timeblock._id) }}>Anular reserva</button>
             : null
         }
         { user?.usertype !== "client" && !!timeblock
           ? (
             <>
-              <button className="btn btn-primary" onClick={() => {  editTimeBlock(timeblock._id)  }}>Editar</button>
-              { !timeblock?.available ? <button className="btn btn-warning" onClick={() => {  cancelBooking(timeblock._id)  }}>Anular cita</button> : null }
-              <button className="btn btn-danger" onClick={() => {  deleteTimeblock(timeblock._id)  }}>Borrar</button>
+              <button className="btn btn-primary" onClick={() => { editTimeBlock(timeblock._id) }}>Editar</button>
+              { !timeblock?.available ? <button className="btn btn-warning" onClick={() => { cancelBooking(timeblock._id)  }}>Anular cita</button> : null }
+              <button className="btn btn-danger" onClick={() => { deleteTimeblock(timeblock._id) }}>Borrar</button>
             </>
           ) : (
             null

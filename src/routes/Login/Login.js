@@ -14,10 +14,9 @@ function Login() {
   const [logMessage, setLogMessage] = useState('')
   const navigate = useNavigate()
 
-  const { isAuthenticated, login } = useAuth()
+  const { login } = useAuth()
 
   const handleLogin = async () => {
-    console.log('Login clicked', { email, password })
     setLogMessage('')
     try {
       const response = await axios.post( apiUrl, { email, password })
