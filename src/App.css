@@ -67,6 +67,12 @@ body {
   box-shadow: rgb(55, 55, 55) 10px 10px 20px 0px;
 }
 
+@media (max-width: 768px) {
+  .login-form-container {
+    width: 98%;
+  }
+}
+
 .login-input-container {
   display: flex;
   flex-direction: column;
@@ -87,8 +93,15 @@ body {
 .home-timeblock-container {
   padding: 20px 20px;
   border-radius: 12px;
+  margin-top: 280px;  
   width: 900px;
   background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.5) 35%, rgba(0,212,255,.5) 100%);
+}
+
+@media (max-width: 768px) {
+  .home-timeblock-container {
+    width: 98%;
+  }
 }
 
 h2 {
@@ -103,6 +116,15 @@ p {
   font-size: 26px;
   color: white;
   text-shadow: 2px 2px 2px black;
+}
+
+@media (max-width: 768px) {
+  h2 {
+    font-size: 24px;
+  }
+  p {
+    font-size: 18px;
+  }
 }
 
 .pick-timeblock-container {
@@ -123,22 +145,29 @@ p {
 }
 
 .home-user-summary {
+  position: fixed;
   display: flex;
-  margin-top: 50px;
-  margin-left: 0px;
-  margin-right: 0px;
-  margin-bottom: 50px;
   padding: 16px 16px;
+  transition: opacity 0.3s ease;
+  top: 60px;
   width: 100%;
   background-color: rgba(255,255,255,.5);
   justify-content: flex-start;
   align-items: center;
 }
 
+.visible {
+  opacity: 1;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none; /* Optional - Prevent interaction when hidden */
+}
+
 .home-timeblock-li {
   list-style-type: none;
   margin-bottom: 10px;
-
 }
 
 .home-timeblock-li-element {
@@ -147,4 +176,16 @@ p {
   padding: 20px 20px;
   border-radius: 24px;
   margin-bottom:32px;
+}
+
+.home-timeblock-card {
+  margin-top: 250px;
+}
+
+.home-timeblock-btn-container {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
 }

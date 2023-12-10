@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useAuth } from '../../context/AuthContext'
 import '../../App.css'
 import { getEndpointURL } from '../../utils/getEndpointURL'
+import { DateFormater } from '../../utils/DateFormater'
 import TimeBlockCard from '../../components/TimeBlockCard.js'
 import Calendar from '../../components/Calendar.js'
 
@@ -23,7 +24,6 @@ function PickTimeBlock() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('PickTimeBlock', isAuthenticated, user)
         const coachesData = await fetchCoachList()
         setCoaches(coachesData)
       } catch (error) {
@@ -36,10 +36,8 @@ function PickTimeBlock() {
 
   const fetchCoachList = async () => {
     try {
-      console.log('fetchCoachList')
       const response = await axios.get(coachesApiUrl)
       const coachesData = response.data.coaches
-      console.log('coaches', coachesData)
       return coachesData
     } catch (error) {
       console.error('Error fetching coaches:', error)
@@ -48,7 +46,6 @@ function PickTimeBlock() {
   }
 
   useEffect(() => {
-    console.log("about to execute fetchCoachTimeblocks", coachID)
     if (coachID) {
       fetchCoachTimeblocks(coachID)
     } else {
@@ -58,21 +55,17 @@ function PickTimeBlock() {
 
   const fetchCoachTimeblocks = async (id = coachID) => {
     if (user && isAuthenticated) {
-      console.log('fetchCoachTimeblocks', id)
       const coachTimeblocks = await fetchUserTimeblocks(id)
       setTimeblocks(coachTimeblocks.filter( tb => tb.available))
     } else {
-      console.log('fetchCoachTimeblocks to login', user)
       navigate('/')
     }
   }
 
   const fetchUserTimeblocks = async (userID) => {
     try {
-      console.log('fetchCoachTimeblocks', userID)
       const response = await axios.post(userTBapiURL, { userID, userTimeZone }) // Replace with your actual API endpoint
       const timeblocks = response.data.timeBlocks // Assuming the response is an array of timeblocks
-      console.log(timeblocks)
       return timeblocks
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
@@ -80,15 +73,13 @@ function PickTimeBlock() {
   }
 
   const bookTimeBlock = async (timeblockID) => {
-    console.log('bookTimeBlock', timeblockID)
     try {
       const selectedTimeblock = timeblocks.find( tb => tb._id === timeblockID )
       if (!selectedTimeblock) return
-      const confirm = window.confirm("¿Está seguro que desea reservar la cita? \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      const confirm = window.confirm("¿Está seguro que desea reservar la cita? \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
 
       const response = await axios.post(getEndpointURL("bookTimeBlock"), { timeblockID, clientID: user._id }) // Replace with your actual API endpoint
-      console.log(" BOOKING RESPONSE: ", response)
       fetchCoachTimeblocks()
     } catch (error) {
       console.error('Error booking timeblocks:', error)
@@ -96,16 +87,13 @@ function PickTimeBlock() {
   }
 
   const cancelBooking = async (timeblockID) => {
-    console.log('cancelBooking', timeblockID)
     try {
       const selectedTimeblock = timeblocks.find( tb => tb._id === selectedEventID )
-      console.log("selectedTimeblock", selectedTimeblock)
       if (!selectedTimeblock) return
-      const confirm = window.confirm("¿Está seguro que desea anular la cita? \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      const confirm = window.confirm("¿Está seguro que desea anular la cita? \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
 
       const response = await axios.post(getEndpointURL("cancelBooking"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
-      console.log(" CANCEL BOOKING RESPONSE: ", response)
       fetchCoachTimeblocks()
     } catch (error) {
       console.error('Error canceling timeblocks:', error)
@@ -115,9 +103,7 @@ function PickTimeBlock() {
 
   const pickTimeblock = async (timeblockID) => {
     try {
-      console.log('pickBlock', timeblocks)
       const response = await axios.post(bookTBapiURL, { timeblockID, clientID: user._id }) // Replace with your actual API endpoint
-      console.log({ timeblockID: timeblocks[0]._id, clientID: user._id }, response)
       fetchCoachTimeblocks(coachID)
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
@@ -142,7 +128,7 @@ function PickTimeBlock() {
             ))}
         </select>
       </div>
-      <div className="container home-timeblock-container">
+      <div className="container home-timeblock-container fixed">
         <h2 className="login-form-title">Seleccione una cita:</h2>
         <TimeBlockCard
           timeblock={ timeblocks.find( tb => tb._id === selectedEventID  ) }

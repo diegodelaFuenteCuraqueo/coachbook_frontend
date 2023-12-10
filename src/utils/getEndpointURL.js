@@ -8,6 +8,5 @@ export function getEndpointURL(apiRoute) {
                 ? URL.LOCALHOST
                 : URL.VERCEL_HOST
 
-  console.log('getEndpointURL', host+URL.API[route])
   return host + URL.API[route]
 }

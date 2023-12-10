@@ -36,7 +36,6 @@ function Register() {
     e.preventDefault()
     try {
       const response = await axios.post(apiUrl, formData)
-      console.log(response.data)
       navigate('/login')
     } catch (error) {
       console.error(error.response.data)

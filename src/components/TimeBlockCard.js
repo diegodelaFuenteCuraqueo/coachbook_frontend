@@ -1,19 +1,20 @@
 import React from 'react'
 import '../App.css'
+import { DateFormater } from '../utils/DateFormater'
 
 function TimeBlockCard({timeblock, user, bookTimeBlock, cancelBooking, deleteTimeblock, editTimeBlock}) {
-  console.log("TimeBlockCard", timeblock, user)
+
   return (
     <>
-    <li key={timeblock?._id} className="home-timeblock-li">
+    <li key={ timeblock?._id } className="home-timeblock-li">
     <div className="home-timeblock-li-element" style={{ border : "1px solid black"}}>
       <div>
-        <p> Nombre: { timeblock?.name || "" }</p>
-        <p> Fecha : { timeblock?.startDate || "" }</p>
-        <p> Duración: { timeblock?.startDate ? "1 hora" : "" } </p>
-        { user?.usertype !== "client"
+        <p> { timeblock?.name ? ` Nombre: ${timeblock.name}` : " Seleccione una cita en el calendario" }</p>
+        <p> { timeblock?.startDate ? ` Fecha : ${DateFormater(timeblock?.startDate)}` : "para ver los detalles" }</p>
+        <p> { timeblock?.startDate ? "Duración: 1 hora " : "" } </p>
+        { user?.usertype !== "client" && timeblock?.name
           ? (
-            !timeblock?.available //&& timeblock?.clientID?._id
+            !timeblock?.available
             ? <p> Tomada por: { timeblock?.clientID?.username || "" }</p>
             : <p> Disponible </p>
           ) : (
@@ -23,7 +24,7 @@ function TimeBlockCard({timeblock, user, bookTimeBlock, cancelBooking, deleteTim
           )
         }
       </div>
-      <div>
+      <div className="home-timeblock-btn-container">
         { user?.usertype === "client" && !!timeblock && timeblock?.available
           ? <button className="btn btn-primary" onClick={() => {  bookTimeBlock(timeblock._id)  }}>Reservar</button>
           : user?.usertype === "client" && !!timeblock && !timeblock?.available

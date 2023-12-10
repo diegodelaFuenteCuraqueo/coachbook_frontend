@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { Calendar as BigCalendar, momentLocalizer } from "react-big-calendar"
 import "react-big-calendar/lib/css/react-big-calendar.css"
+import GetDeviceType from "../utils/GetDeviceType.js"
 import moment from "moment"
 import 'moment/locale/es'; // Import Spanish locale
+
 const messages = {
   allDay: 'Todo el día',
   previous: 'Anterior',
@@ -22,10 +24,9 @@ const localizer = momentLocalizer(moment)
 
 const Calendar = ({ timeblocks, user, setSelectedEventID, createTimeblock }) => {
   const [events, setEvents] = useState([])
-  //const [selectedEvent, setSelectedEvent] = useState({})
+  const { isMobile } = GetDeviceType()
 
   useEffect(() => {
-    console.log("useEffect")
     const events = timeblocks.map((tb) => {
       return {
         title: tb.name,
@@ -39,8 +40,6 @@ const Calendar = ({ timeblocks, user, setSelectedEventID, createTimeblock }) => 
   }, [timeblocks])
 
   const handleEventClick = (event) => {
-    //console.log("handleEventClick", event)
-    //window.selected = event
     setSelectedEventID(event.id )
   }
 
@@ -67,7 +66,8 @@ const Calendar = ({ timeblocks, user, setSelectedEventID, createTimeblock }) => 
       return
     }
 
-    const title = window.prompt("Nombre de la cita (opcional) ")
+    const title = window.prompt("Nombre de la cita (requerido) ")
+    if (!title) return
 
     createTimeblock({
       name: title || "Sin nombre",
@@ -78,13 +78,24 @@ const Calendar = ({ timeblocks, user, setSelectedEventID, createTimeblock }) => 
     })
   }
 
+  const getEventStyle = (event) => {
+    const backgroundColor = event.available ? '#4caf50' : '#E1C16E'
+    let style = {
+      backgroundColor,
+    }
+    return {
+      style: style
+    }
+  }
+
+
   return (
     <>
       <div style={{ height: "500px", backgroundColor: "lightGray", borderColor: "black" }}>
         <BigCalendar
           localizer={localizer}
           events={events}
-          defaultView="week"
+          defaultView={ isMobile ? "month" : "week" }
           selectable
           onSelectSlot={handleSelectSlot}
           onSelectEvent={handleEventClick}
@@ -93,6 +104,7 @@ const Calendar = ({ timeblocks, user, setSelectedEventID, createTimeblock }) => 
           timeslots={2}
           defaultDate={new Date()}
           messages={messages}
+          eventPropGetter={getEventStyle} 
         />
       </div>
     </>

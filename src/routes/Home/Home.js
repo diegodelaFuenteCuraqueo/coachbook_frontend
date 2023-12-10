@@ -7,6 +7,7 @@ import '../../App.css'
 import UserSummary from '../../components/UserSummary.js'
 import TimeBlockCard from '../../components/TimeBlockCard.js'
 import Calendar from '../../components/Calendar.js'
+import { DateFormater } from '../../utils/DateFormater.js'
 import { getEndpointURL } from '../../utils/getEndpointURL'
 
 
@@ -21,12 +22,6 @@ const Home = () => {
   const deleteTBapiURL = getEndpointURL("deleteTimeBlock") //URL.LOCALHOST + URL.API.deleteTimeBlock
   const createTBapiURL = getEndpointURL("saveTimeBlock") //URL.LOCALHOST + URL.API.saveTimeBlock
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-
-  console.log("asdasd ", timeblocks, selectedEventID )
-  useEffect(() => {
-    console.log('HomePage', isAuthenticated, user)
-    //fetchTimeblocks()
-  }, [])
 
   useEffect(() => {
     console.log('HomePage:useEffect user', isAuthenticated, user)
@@ -47,22 +42,16 @@ const Home = () => {
 
   const fetchUserTimeblocks = async (userID) => {
     try {
-      console.log('fetchUserTimeblocks', userID)
       const response = await axios.post(userTBapiURL, { userID, userTimeZone}) // Replace with your actual API endpoint
       const timeblocks = response.data.timeBlocks // Assuming the response is an array of timeblocks
-      window.timeblocks = timeblocks
       return timeblocks
     } catch (error) {
-      console.error('Error fetching timeblocks:', error)
     }
   }
 
   const createTimeblock = async (formData) => {
-    console.log('createTimeblock', formData)
     try {
-      console.log('handleSubmit', formData)
       const response = await axios.post(createTBapiURL, {formData, user})
-      console.log("response", response)
       fetchTimeblocks()
     } catch (error) {
       console.error(error)
@@ -71,14 +60,12 @@ const Home = () => {
 
   const deleteTimeblock = async (timeblockID) => {
     try {
-      console.log('deleteTimeblock', timeblockID)
       const selectedTimeblock = timeblocks.find( tb => tb._id === timeblockID )
       if (!selectedTimeblock) return
-      const confirm = window.confirm("¿Está seguro que desea eliminar la cita? \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      const confirm = window.confirm("¿Está seguro que desea eliminar la cita? \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
 
       const response = await axios.post(deleteTBapiURL, { timeblockID, user }) // Replace with your actual API endpoint
-      console.log(response)
       fetchTimeblocks()
     } catch (error) {
       console.error('Error fetching timeblocks:', error)
@@ -86,20 +73,17 @@ const Home = () => {
   }
 
   const editTimeBlock = async (timeblockID) => {
-    console.log('editTimeBlock', timeblockID)
     navigate(`/edit-timeblock`, { state: { timeblockID } })
   }
 
   const bookTimeBlock = async (timeblockID) => {
-    console.log('bookTimeBlock', timeblockID)
     try {
       const selectedTimeblock = timeblocks.find( tb => tb._id === timeblockID )
       if (!selectedTimeblock) return
-      const confirm = window.confirm("¿Está seguro que desea reservar la cita? \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      const confirm = window.confirm("¿Está seguro que desea reservar la cita? \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
 
       const response = await axios.post(getEndpointURL("bookTimeBlock"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
-      console.log(" BOOKING RESPONSE: ", response)
       fetchTimeblocks()
     } catch (error) {
       console.error('Error booking timeblocks:', error)
@@ -107,16 +91,13 @@ const Home = () => {
   }
 
   const cancelBooking = async (timeblockID) => {
-    console.log('cancelBooking', timeblockID)
     try {
       const selectedTimeblock = timeblocks.find( tb => tb._id === selectedEventID )
-      console.log("selectedTimeblock", selectedTimeblock)
       if (!selectedTimeblock) return
-      const confirm = window.confirm("¿Está seguro que desea anular la cita? (quedará como disponible) \n" + selectedTimeblock.name + "\n"+ selectedTimeblock.startDate)
+      const confirm = window.confirm("¿Está seguro que desea anular la cita? (quedará como disponible) \n" + selectedTimeblock.name + "\n"+ DateFormater(selectedTimeblock.startDate))
       if (!confirm) return
 
       const response = await axios.post(getEndpointURL("cancelBooking"), { timeblockID, _id: user._id }) // Replace with your actual API endpoint
-      console.log(" CANCEL BOOKING RESPONSE: ", response)
       fetchTimeblocks()
     } catch (error) {
       console.error('Error canceling timeblocks:', error)

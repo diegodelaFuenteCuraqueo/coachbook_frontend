@@ -6,7 +6,6 @@ const Navbar = () => {
   const [menuVisible, setMenuVisible] = useState(false)
   const navigate = useNavigate()
   const { isAuthenticated, logout, user } = useAuth()
-  window.auth = useAuth()
 
   const handleLinkClick = (event) => {
     event.preventDefault()
@@ -40,6 +39,9 @@ const Navbar = () => {
                     <a className="nav-link" onClick={handleLinkClick} href="/register">Registar usuario</a>
                   </li>
                   <li className="nav-item">
+                    <a className="nav-link" onClick={handleLinkClick} href="/change-password">Cambiar contraseña</a>
+                  </li>
+                  <li className="nav-item">
                     <a className="nav-link" onClick={handleLinkClick} href="/logout">Cerrar sesión</a>
                   </li>
                 </>
@@ -51,6 +53,9 @@ const Navbar = () => {
                       </li>
                       <li className="nav-item">
                         <a className="nav-link" onClick={handleLinkClick} href="/pick-timeblock">Agendar una cita</a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" onClick={handleLinkClick} href="/change-password">Cambiar contraseña</a>
                       </li>
                       <li className="nav-item">
                         <a className="nav-link" onClick={handleLinkClick} href="/logout">Cerrar sesión</a>
