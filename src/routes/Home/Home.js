@@ -9,13 +9,15 @@ import TimeBlockCard from '../../components/TimeBlockCard.js'
 import Calendar from '../../components/Calendar.js'
 import { DateFormater } from '../../utils/DateFormater.js'
 import { getEndpointURL } from '../../utils/getEndpointURL'
+import Popup from '../../components/Popup/Popup.jsx'
 
 const Home = () => {
 
   const navigate = useNavigate()
   const { isAuthenticated, user } = useAuth()
-  const [ timeblocks, setTimeblocks] = useState([])
-  const [ selectedEventID, setSelectedEventID] = useState({})
+  const [ timeblocks, setTimeblocks ] = useState([])
+  const [ selectedEventID, setSelectedEventID ] = useState({})
+  const [ showEditWindow, setShowEditWindow ] = useState(false)
 
   const userTBapiURL = getEndpointURL(user.usertype === "client" ? "clientTimeBlocks" : "userTimeBlocks") //URL.LOCALHOST + URL.API.userTimeBlocks
   const deleteTBapiURL = getEndpointURL("deleteTimeBlock") //URL.LOCALHOST + URL.API.deleteTimeBlock
@@ -25,6 +27,12 @@ const Home = () => {
   useEffect(() => {
     fetchTimeblocks()
   }, [user])
+
+  useEffect(() => {
+    if (!showEditWindow && selectedEventID){
+      fetchTimeblocks()
+    }
+  }, [showEditWindow])
 
   const fetchTimeblocks = async () => {
     if (user && isAuthenticated) {
@@ -67,7 +75,10 @@ const Home = () => {
   }
 
   const editTimeBlock = async (timeblockID) => {
-    navigate(`/edit-timeblock`, { state: { timeblockID } })
+    console.log("editTimeBlock", timeblockID)
+    setSelectedEventID(timeblockID)
+    await setShowEditWindow(true)
+    fetchTimeblocks()
   }
 
   const bookTimeBlock = async (timeblockID) => {
@@ -98,6 +109,7 @@ const Home = () => {
 
   return (
     <>
+      <Popup show={showEditWindow} setShow={setShowEditWindow} data={ JSON.stringify(timeblocks.find( tb => tb._id === selectedEventID)) } events={ timeblocks } deleteTimeblock={ deleteTimeblock }/>
       <UserSummary user={user} />
 
       <div className="container home-timeblock-container">
@@ -109,17 +121,17 @@ const Home = () => {
         }
         <TimeBlockCard
           timeblock={ timeblocks.find( tb => tb._id === selectedEventID  ) }
-          user={user}
-          editTimeBlock={editTimeBlock}
-          deleteTimeblock={deleteTimeblock}
-          bookTimeBlock={bookTimeBlock}
-          cancelBooking={cancelBooking}
+          user={ user }
+          editTimeBlock={ editTimeBlock }
+          //deleteTimeblock={ deleteTimeblock }
+          bookTimeBlock={ bookTimeBlock }
+          cancelBooking={ cancelBooking }
         />
         <Calendar
-          timeblocks={timeblocks}
-          user={user}
-          setSelectedEventID={setSelectedEventID}
-          createTimeblock={createTimeblock}
+          timeblocks={ timeblocks }
+          user={ user }
+          setSelectedEventID={ setSelectedEventID }
+          createTimeblock={ createTimeblock }
         />
       </div>
     </>

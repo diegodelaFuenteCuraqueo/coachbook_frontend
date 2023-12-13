@@ -15,11 +15,11 @@ function TimeBlockCard({timeblock, user, bookTimeBlock, cancelBooking, deleteTim
         { user?.usertype !== "client" && timeblock?.name
           ? (
             !timeblock?.available
-            ? <p> Solicitada por: { timeblock?.clientID?.username || "" }</p>
+            ? <p> Coachee solicitante : { timeblock?.clientID?.username || "" }</p>
             : <p> Disponible </p>
           ) : (
             timeblock?.createdBy?.username
-            ? <p>Coach: { timeblock?.createdBy?.username || "" } </p>
+            ? <p>Coach : { timeblock?.createdBy?.username || "" } </p>
             : null
           )
         }

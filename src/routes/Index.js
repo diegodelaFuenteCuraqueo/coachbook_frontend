@@ -8,6 +8,7 @@ import PickTimeBlockPage from './PickTimeBlock'
 import Inicio from './Inicio'
 import ChangePasswordPage from './ChangePassword'
 import { useAuth } from '../context/AuthContext'
+import EditTimeBlockPage from './EditTimeBlock'
 
 function Pages() {
   const { isAuthenticated, user } = useAuth()
@@ -21,6 +22,7 @@ function Pages() {
         <Route path="/register" element={ isAuthenticated && user?.usertype !== "client" ? <RegisterPage /> : <HomePage /> } />
         <Route path="/home" element={ isAuthenticated ? <HomePage /> : <LoginPage /> } />
         <Route path="/pick-timeblock" element={ isAuthenticated ? <PickTimeBlockPage /> : <LoginPage /> } />
+        <Route path="/edit-timeblock" element={ isAuthenticated ? <EditTimeBlockPage /> : <LoginPage /> } />
         <Route path="/change-password" element={ isAuthenticated ? <ChangePasswordPage /> : <LoginPage /> } />
         <Route path="*" element={ <LoginPage />} />
       </Routes>
