@@ -36,7 +36,6 @@ function TimeBlockCard({timeblock, user, bookTimeBlock, cancelBooking, deleteTim
             <>
               <button className="btn btn-primary" onClick={() => { editTimeBlock(timeblock._id) }}>Editar</button>
               { !timeblock?.available ? <button className="btn btn-warning" onClick={() => { cancelBooking(timeblock._id)  }}>Anular cita</button> : null }
-              <button className="btn btn-danger" onClick={() => { deleteTimeblock(timeblock._id) }}>Borrar</button>
             </>
           ) : (
             null
