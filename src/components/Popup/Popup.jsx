@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import './styles.css';
+import React, {useEffect, useState} from 'react'
+import './styles.css'
 import axios from 'axios'
-import { useAuth } from '../../context/AuthContext.js' // Import the useAuth hook
+import { useAuth } from '../../context/AuthContext.js'
 import { getEndpointURL } from '../../utils/getEndpointURL'
+import { stringToInputDate } from '../../utils/DateFormater.js'
 
-const editTBApiUrl = getEndpointURL("editTimeBlock")// URL.LOCALHOST + URL.API.editTimeBlock
+const editTBApiUrl = getEndpointURL("editTimeBlock")
 
 const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
   const [ isPromptOpen, setIsPromptOpen ] = useState(false)
@@ -19,13 +20,15 @@ const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
     createdBy: "",
     clientID: ''
   })
-
   const localDate = eventData.startDate
-    ? new Date(eventData.startDate).toLocaleDateString().split("/").reverse().join("-") + "T" + new Date(eventData.startDate).toLocaleTimeString()
+    ? stringToInputDate(eventData.startDate)
     : ""
 
   useEffect(() => {
-    console.log("receivedData", data)
+    setError('')
+  }, [])
+
+  useEffect(() => {
     setEventData(JSON.parse(data ?? "{}"))
   }, [data])
 
@@ -34,7 +37,7 @@ const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
   }, [events])
 
   useEffect(() => {
-    setIsPromptOpen(show);
+    setIsPromptOpen(show)
   }, [show])
 
   const handleChange = (e) => {
@@ -56,8 +59,8 @@ const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
   }
 
   const onClose = (e) => {
-    //e.stopPropagation();
-    setShow(false);
+    //e.stopPropagation()
+    setShow(false)
   }
 
   const deleteElement = async (e) => {
@@ -66,21 +69,19 @@ const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
   }
 
   const isOverlap = (event, eventsList) => {
-    const start = new Date(event.startDate).getTime();
-    const end = new Date(event.endDate).getTime();
+    const start = new Date(event.startDate).getTime()
+    const end = new Date(event.endDate).getTime()
 
     for (const existingEvent of eventsList) {
-        const existingStart = new Date(existingEvent.startDate).getTime();
-        const existingEnd = new Date(existingEvent.endDate).getTime();
+      const existingStart = new Date(existingEvent.startDate).getTime()
+      const existingEnd = new Date(existingEvent.endDate).getTime()
 
-        if (start < existingEnd && end > existingStart) {
-            return true; // Overlap found
-        }
+      if (start < existingEnd && end > existingStart && event._id !== existingEvent._id) {
+        return true
+      }
     }
-
-    return false; // No overlap found
-}
-
+    return false
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -121,8 +122,8 @@ const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
                       type="text"
                       name="name"
                       id="name"
-                      onChange={handleChange}
-                      value={eventData.name}
+                      onChange={ handleChange }
+                      value={ eventData.name }
                       required
                     />
                   </div>
@@ -133,7 +134,7 @@ const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
                       type="datetime-local"
                       name="startDate"
                       id="startDate"
-                      onChange={handleChange}
+                      onChange={ handleChange }
                       value={ localDate }
                       required
                     />
@@ -147,8 +148,8 @@ const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
                 </form>
               </div>
 
-              <span className="close-btn" onClick={onClose}>
-                &times;
+              <span className="close-btn" onClick={ onClose }>
+                X
               </span>
               <div>
                 {children}
@@ -158,6 +159,6 @@ const Popup = ({ show, setShow, data, events, children, deleteTimeblock }) => {
         ) : null
       }
     </>)
-};
+}
 
-export default Popup;
+export default Popup

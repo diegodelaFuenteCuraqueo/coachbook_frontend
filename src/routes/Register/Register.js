@@ -16,7 +16,7 @@ function Register() {
     if (user.usertype === 'client' || !isAuthenticated) {
       navigate('/home')
     }
-  }, [ user, isAuthenticated ])
+  }, [ user, isAuthenticated, navigate ])
 
   const [formData, setFormData] = useState({
     username: '',

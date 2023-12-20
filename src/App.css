@@ -43,6 +43,7 @@ nav {
 
 body {
   background-image: url("../public/wavesBackground.jpg");
+  background-attachment: fixed;
 }
 
 .login-label {
@@ -92,10 +93,13 @@ body {
 
 .home-timeblock-container {
   padding: 20px 20px;
-  border-radius: 12px;
-  margin-top: 280px;  
+  border-radius: 6px;
+  margin-top: 240px;
+  margin-bottom: 50px;
   width: 900px;
-  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.5) 35%, rgba(0,212,255,.5) 100%);
+  height: 1380px;
+  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.75) 35%, rgba(0,212,255,.75) 100%);
+  box-shadow: rgb(55, 55, 55) 10px 10px 20px 0px;
 }
 
 @media (max-width: 768px) {
@@ -125,15 +129,6 @@ p {
   p {
     font-size: 18px;
   }
-}
-
-.pick-timeblock-container {
-  margin-top: 50px;
-  padding: 50px 20px;
-  border-radius: 12px;
-  width: 600px;
-  background: rgba(255,255,255,.5);
-  margin-bottom: 50px
 }
 
 .home-timeblock-ul {

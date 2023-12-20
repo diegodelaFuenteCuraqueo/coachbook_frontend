@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useAuth } from '../../context/AuthContext'
 import '../../App.css'
+import './styles.css'
 import { getEndpointURL } from '../../utils/getEndpointURL'
 import { DateFormater } from '../../utils/DateFormater'
 import TimeBlockCard from '../../components/TimeBlockCard.js'
@@ -42,22 +43,22 @@ function PickTimeBlock() {
     }
   }
 
-  useEffect(() => {
-    if (coachID) {
-      fetchCoachTimeblocks(coachID)
-    } else {
-      setTimeblocks([])
-    }
-  }, [coachID])
-
-  const fetchCoachTimeblocks = async (id = coachID) => {
+  const fetchCoachTimeblocks = useCallback(async (id = coachID) => {
     if (user && isAuthenticated) {
       const coachTimeblocks = await fetchUserTimeblocks(id)
       setTimeblocks(coachTimeblocks.filter( tb => tb.available))
     } else {
       navigate('/')
     }
-  }
+  }, [coachID, user, isAuthenticated, navigate])
+
+  useEffect(() => {
+    if (coachID) {
+      fetchCoachTimeblocks(coachID)
+    } else {
+      setTimeblocks([])
+    }
+  }, [coachID, fetchCoachTimeblocks])
 
   const fetchUserTimeblocks = async (userID) => {
     try {
@@ -98,7 +99,7 @@ function PickTimeBlock() {
 
   return (
     <>
-      <div className="container pick-timeblock-container">
+      <div className="container pick-timeblock-head-container">
         <h1 className="home-welcome-title">Agendar cita</h1>
         <p> Para solicitar una cita, primero debe seleccionar un coach de la lista. El calendario desplegará los horarios disponibles del coach indicado.
         <br/> Para reservar una cita, seleccione un horario disponible y presione el botón "Reservar".
@@ -114,7 +115,7 @@ function PickTimeBlock() {
             ))}
         </select>
       </div>
-      <div className="container home-timeblock-container fixed">
+      <div className="container pick-timeblock-container fixed">
         <h2 className="login-form-title">Seleccione una cita:</h2>
         <TimeBlockCard
           timeblock={ timeblocks.find(tb => tb._id === selectedEventID) }

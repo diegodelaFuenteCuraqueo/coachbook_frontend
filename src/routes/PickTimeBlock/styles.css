@@ -1,0 +1,31 @@
+.pick-timeblock-head-container {
+  margin-top: 50px;
+  padding: 50px 20px;
+  border-radius: 12px;
+  width: 800px;
+  background: rgba(255,255,255,.75);
+  margin-bottom: 50px;
+}
+
+@media (max-width: 768px) {
+  .pick-timeblock-head-container {
+    width: 98%;
+  }
+}
+
+.pick-timeblock-container {
+  padding: 20px 20px;
+  border-radius: 6px;
+  /*margin-top: 240px;*/
+  margin-bottom: 50px;
+  width: 900px;
+  height: 1200px;
+  background: linear-gradient(225deg, rgb(8, 4, 71) 0%, rgba(9,9,121,.75) 35%, rgba(0,212,255,.75) 100%);
+  box-shadow: rgb(55, 55, 55) 10px 10px 20px 0px;
+}
+
+@media (max-width: 768px) {
+  .pick-timeblock-container {
+    width: 98%;
+  }
+}

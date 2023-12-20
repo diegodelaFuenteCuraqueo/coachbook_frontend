@@ -89,7 +89,7 @@ const Calendar = ({ timeblocks, user, setSelectedEventID, createTimeblock }) => 
 
   return (
     <>
-      <div style={{ height: "500px", backgroundColor: "lightGray", borderColor: "black" }}>
+      <div style={{ height: "700px", backgroundColor: "rgba(220,245,255,.7)", borderColor: "black" }}>
         <BigCalendar
           localizer={localizer}
           events={events}

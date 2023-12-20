@@ -24,7 +24,7 @@ function ChangePassword() {
 
     try {
       const response = await axios.post( apiUrl, { email: user.email, password, newPassword })
-      navigate(`/logout`, { message: "password changed" } )
+      navigate(`/logout`, { message: response.data } )
     } catch (error) {
       setLogMessage(error.response?.data?.message)
     }

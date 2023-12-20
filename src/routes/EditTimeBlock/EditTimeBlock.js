@@ -6,8 +6,7 @@ import '../../App.css'
 import { getEndpointURL } from '../../utils/getEndpointURL'
 import { DateFormater } from '../../utils/DateFormater.js'
 
-const editTBApiUrl = getEndpointURL("editTimeBlock")// URL.LOCALHOST + URL.API.editTimeBlock
-const getTBApiUrl = getEndpointURL("timeBlock")// URL.LOCALHOST + URL.API.timeBlock
+const editTBApiUrl = getEndpointURL("editTimeBlock")
 
 const EditTimeBlock = () => {
   const location = useLocation()
@@ -20,12 +19,13 @@ const EditTimeBlock = () => {
     name: '',
     startDate: '',
     endDate: '',
-    createdBy: "", //user.id || "650f416197c0c31963b71f2a", // This should be the user's ID
+    createdBy: "",
     clientID: ''
   })
 
   useEffect(() => {
     console.log("receivedData", receivedData)
+    const getTBApiUrl = getEndpointURL("timeBlock")
     try {
       const fetchTimeblock = async () => {
         const response = await axios.post(getTBApiUrl, { timeblockID: receivedData.timeblockID, userID: user._id })
@@ -33,7 +33,7 @@ const EditTimeBlock = () => {
         console.log(response.data)
         const { name } = response.data.timeBlock
         const startDate = response.data.timeBlock.startDate.slice(0, 16)
-        const endDate = response.data.timeBlock.endDate.slice(0, 16)  
+        const endDate = response.data.timeBlock.endDate.slice(0, 16)
         console.log("startDate", DateFormater(startDate))
         setFormData({ name, startDate, endDate, createdBy: user.id, clientID: response.data.timeBlock?.clientID || "" })
       }
@@ -41,7 +41,7 @@ const EditTimeBlock = () => {
     } catch (error) {
       console.error(error)
     }
-  }, [])
+  }, [ receivedData, user])
 
   // Function to handle form input changes
   const handleChange = (e) => {
